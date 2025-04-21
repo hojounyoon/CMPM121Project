@@ -18,6 +18,7 @@ public class EnemySpawner : MonoBehaviour
     private int totalWaves = 10; // Default number of waves
     private int currentWaveIndex = 0;
     private bool isSpawning = false;
+    private Coroutine currentWaveCoroutine;
     // test comment
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -99,15 +100,45 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    public void ResetWaves()
+    {
+        Debug.Log("Resetting waves...");
+        currentWave = 0;
+        currentWaveIndex = 0;
+        isSpawning = false;
+        
+        // Stop any existing wave coroutine
+        if (currentWaveCoroutine != null)
+        {
+            StopCoroutine(currentWaveCoroutine);
+            currentWaveCoroutine = null;
+        }
+        
+        Debug.Log($"Wave reset - currentWave: {currentWave}, currentWaveIndex: {currentWaveIndex}");
+    }
+
+    public void StartNewWave()
+    {
+        if (!isSpawning)
+        {
+            isSpawning = true;
+            currentWaveCoroutine = StartCoroutine(SpawnWave());
+        }
+    }
+
     IEnumerator SpawnWave()
     {
+        // Reset countdown
         GameManager.Instance.state = GameManager.GameState.COUNTDOWN;
         GameManager.Instance.countdown = 3;
+        
+        // Countdown from 3 to 1
         for (int i = 3; i > 0; i--)
         {
+            GameManager.Instance.countdown = i;
             yield return new WaitForSeconds(1);
-            GameManager.Instance.countdown--;
         }
+        
         GameManager.Instance.state = GameManager.GameState.INWAVE;
         
         // Only spawn new enemies if we have less than 10
@@ -124,6 +155,10 @@ public class EnemySpawner : MonoBehaviour
         yield return new WaitWhile(() => GameManager.Instance.enemy_count > 0);
         Debug.Log("Wave complete - all enemies destroyed");
         GameManager.Instance.state = GameManager.GameState.WAVEEND;
+        
+        // Reset spawning state
+        isSpawning = false;
+        currentWaveCoroutine = null;
     }
 
     IEnumerator SpawnZombie()
@@ -140,23 +175,5 @@ public class EnemySpawner : MonoBehaviour
         en.speed = 10;
         GameManager.Instance.AddEnemy(new_enemy);
         yield return new WaitForSeconds(0.5f);
-    }
-
-    public void ResetWaves()
-    {
-        Debug.Log("Resetting waves...");
-        currentWave = 0;
-        currentWaveIndex = 0;
-        isSpawning = false;
-        Debug.Log($"Wave reset - currentWave: {currentWave}, currentWaveIndex: {currentWaveIndex}");
-    }
-
-    public void StartNewWave()
-    {
-        if (!isSpawning)
-        {
-            isSpawning = true;
-            StartCoroutine(SpawnWave());
-        }
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -145,12 +146,19 @@ public class GameOverManager : MonoBehaviour
         GameManager.Instance.ClearEnemies();
         Debug.Log($"Destroyed {existingEnemies.Length} existing enemies");
 
-        // Start the first wave
+        // Reset and start the first wave
         if (enemySpawner != null)
         {
             enemySpawner.ResetWaves();
-            enemySpawner.StartNewWave();
+            // Wait a frame to ensure everything is reset
+            StartCoroutine(StartWaveAfterDelay());
         }
+    }
+
+    private IEnumerator StartWaveAfterDelay()
+    {
+        yield return null; // Wait one frame
+        enemySpawner.StartNewWave();
     }
 
     public void RestartFromVictory()
