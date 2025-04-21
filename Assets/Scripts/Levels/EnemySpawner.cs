@@ -19,8 +19,7 @@ public class EnemySpawner : MonoBehaviour
     private int currentWaveIndex = 0;
     private bool isSpawning = false;
     private Coroutine currentWaveCoroutine;
-    // test comment
-
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
