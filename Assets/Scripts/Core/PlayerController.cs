@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
         // Debug log for points
         if (StatManager.Instance != null)
         {
-            Debug.Log($"Current Points: {StatManager.Instance.totalPoints}, Enemy Count: {GameManager.Instance.enemy_count}");
+            //Debug.Log($"Current Points: {StatManager.Instance.totalPoints}, Enemy Count: {GameManager.Instance.enemy_count}");
         }
 
         // Handle player input
@@ -95,14 +95,14 @@ public class PlayerController : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        Debug.Log($"OnMove called - GameState: {GameManager.Instance.state}, Input: {value.Get<Vector2>()}");
+        //Debug.Log($"OnMove called - GameState: {GameManager.Instance.state}, Input: {value.Get<Vector2>()}");
         if (GameManager.Instance.state == GameManager.GameState.PREGAME || GameManager.Instance.state == GameManager.GameState.GAMEOVER) 
         {
             Debug.Log("Movement blocked due to game state");
             return;
         }
         unit.movement = value.Get<Vector2>()*speed;
-        Debug.Log($"Movement set to: {unit.movement}");
+        //Debug.Log($"Movement set to: {unit.movement}");
     }
 
     void Die()

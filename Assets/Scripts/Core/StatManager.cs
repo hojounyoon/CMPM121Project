@@ -32,6 +32,7 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
+        GameManager.Instance.totalWaves = totalWaves;
         ResetStats();
         Debug.Log("StatManager started. Initial points: " + totalPoints);
     }
@@ -53,7 +54,7 @@ public class StatManager : MonoBehaviour
     {
         totalPoints += 100;
         enemiesDefeated++;
-        Debug.Log($"Enemy defeated! Total points: {totalPoints}, Total enemies defeated: {enemiesDefeated}");
+        //Debug.Log($"Enemy defeated! Total points: {totalPoints}, Total enemies defeated: {enemiesDefeated}");
     }
 
     void Update()
@@ -78,9 +79,9 @@ public class StatManager : MonoBehaviour
                 currentWaveTime = waveEndTime - waveStartTime;
                 isWaveEnded = true;
                 currentWave++;
-                
+                Debug.Log($"current wave is: {currentWave} total wave is {totalWaves}");
                 // Check for victory
-                if (currentWave >= totalWaves)
+                if (currentWave >= GameManager.Instance.totalWaves)
                 {
                     isVictory = true;
                     GameManager.Instance.state = GameManager.GameState.GAMEOVER;

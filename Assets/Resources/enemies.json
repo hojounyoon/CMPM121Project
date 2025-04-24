@@ -19,6 +19,13 @@
        "hp": 30,
        "speed": 7,
        "damage": 10
+   },
+   {
+        "name": "eye",
+        "sprite": 5,
+        "hp": 20,
+        "speed": 12,
+        "damage": 5
    }
  
 ]

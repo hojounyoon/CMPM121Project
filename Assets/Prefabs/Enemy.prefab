@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 399c9e4011cba3e4c829138ef2eedbda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dmg: 0
   target: {fileID: 0}
   speed: 5
   healthui: {fileID: 7326907792581316403}
