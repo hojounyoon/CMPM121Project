@@ -37,6 +37,10 @@ public class GameManager
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }
 
+    public int currentWave = 0;
+
+    public RewardScreen rewardScreen;
+
     public void AddEnemy(GameObject enemy)
     {
         if (enemies == null)
@@ -71,6 +75,25 @@ public class GameManager
         if (enemies == null || enemies.Count == 0) return null;
         if (enemies.Count == 1) return enemies[0];
         return enemies.Aggregate((a,b) => (a.transform.position - point).sqrMagnitude < (b.transform.position - point).sqrMagnitude ? a : b);
+    }
+
+    public void StartNextWave()
+    {
+        currentWave++;
+        state = GameState.INWAVE;
+        // Any other wave start logic you have
+    }
+
+    public void OnWaveComplete()
+    {
+        Debug.Log("Wave Complete - Showing reward screen");
+        state = GameState.WAVEEND;
+        if (rewardScreen == null)
+        {
+            Debug.LogError("RewardScreen reference is missing in GameManager!");
+            return;
+        }
+        rewardScreen.Show();
     }
 
     private GameManager()

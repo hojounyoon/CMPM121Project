@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
 
     public Unit unit;
 
+    public Transform spellContainer; // Reference to the UI container for spells
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -111,4 +113,11 @@ public class PlayerController : MonoBehaviour
         Debug.Log("You Lost");
     }
 
+    public void AddSpell(Spell spell)
+    {
+        // Instantiate a new SpellUI
+        GameObject spellUIObject = Instantiate(spellui.gameObject, spellContainer);
+        SpellUI newSpellUI = spellUIObject.GetComponent<SpellUI>();
+        newSpellUI.SetSpell(spell);
+    }
 }
