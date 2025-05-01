@@ -4,6 +4,7 @@ using TMPro;
 public class RewardScreenManager : MonoBehaviour
 {
     public GameObject rewardUI;
+    public RewardScreen spellRewardScreen;
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI pointsText;
@@ -23,6 +24,10 @@ public class RewardScreenManager : MonoBehaviour
         {
             rewardUI.SetActive(false);
         }
+        if (spellRewardScreen != null)
+        {
+            spellRewardScreen.gameObject.SetActive(false);
+        }
         totalPoints = 0;
         enemiesDefeated = 0;
         waveStartTime = Time.time;
@@ -41,35 +46,43 @@ public class RewardScreenManager : MonoBehaviour
                 // Capture final wave time
                 currentWaveTime = Time.time - waveStartTime;
                 isWaveEnded = true;
+                
+                // Show spell reward screen
+                if (spellRewardScreen != null)
+                {
+                    spellRewardScreen.Show();
+                }
             }
 
             rewardUI.SetActive(true);
             UpdateStats();
         }
-        else
+        else if (GameManager.Instance.state == GameManager.GameState.INWAVE)
         {
+            // Hide UI screens when wave starts
             rewardUI.SetActive(false);
-
-            if (GameManager.Instance.state == GameManager.GameState.INWAVE)
+            if (spellRewardScreen != null)
             {
-                // Track enemy defeats
-                int currentEnemies = GameManager.Instance.enemy_count;
-                if (currentEnemies < lastEnemyCount)
-                {
-                    int defeated = lastEnemyCount - currentEnemies;
-                    totalPoints += defeated * 100;
-                    enemiesDefeated += defeated;
-                    lastEnemyCount = currentEnemies;
-                }
+                spellRewardScreen.gameObject.SetActive(false);
+            }
 
-                // Reset for new wave if just started
-                if (isWaveEnded)
-                {
-                    waveStartTime = Time.time;
-                    isWaveEnded = false;
-                    currentWaveTime = 0f;
-                    Debug.Log($"Wave started. Time: {waveStartTime}");
-                }
+            // Track enemy defeats
+            int currentEnemies = GameManager.Instance.enemy_count;
+            if (currentEnemies < lastEnemyCount)
+            {
+                int defeated = lastEnemyCount - currentEnemies;
+                totalPoints += defeated * 100;
+                enemiesDefeated += defeated;
+                lastEnemyCount = currentEnemies;
+            }
+
+            // Reset for new wave if just started
+            if (isWaveEnded)
+            {
+                waveStartTime = Time.time;
+                isWaveEnded = false;
+                currentWaveTime = 0f;
+                Debug.Log($"Wave started. Time: {waveStartTime}");
             }
         }
     }
@@ -91,5 +104,18 @@ public class RewardScreenManager : MonoBehaviour
 
         // Get points from StatManager
         pointsText.text = $"Points: {StatManager.Instance.totalPoints}";
+    }
+
+    public void OnStartNextWaveClicked()
+    {
+        // Hide UI screens
+        rewardUI.SetActive(false);
+        if (spellRewardScreen != null)
+        {
+            spellRewardScreen.gameObject.SetActive(false);
+        }
+        
+        // Start next wave
+        GameManager.Instance.StartNextWave();
     }
 }

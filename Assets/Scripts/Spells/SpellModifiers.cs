@@ -130,7 +130,7 @@ public class ChaosSpell : Spell
 
     public override int GetDamage()
     {
-        return (int)(baseSpell.GetDamage() * (1 + Mathf.Sin(Time.time * 5) * 0.5f));
+        return (int)(baseSpell.GetDamage() * (1 * 0.5f));
     }
 
     protected override IEnumerator DoCast(Vector3 where, Vector3 target)

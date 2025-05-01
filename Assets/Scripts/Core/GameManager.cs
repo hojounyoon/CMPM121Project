@@ -86,13 +86,7 @@ public class GameManager
 
     public void OnWaveComplete()
     {
-        Debug.Log("Wave Complete - Showing reward screen");
         state = GameState.WAVEEND;
-        if (rewardScreen == null)
-        {
-            Debug.LogError("RewardScreen reference is missing in GameManager!");
-            return;
-        }
         rewardScreen.Show();
     }
 
