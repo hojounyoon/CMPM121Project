@@ -97,18 +97,16 @@ public class SplitterSpell : Spell
         this.baseSpell = spell;
     }
 
-    public override int GetManaCost()
-    {
-        return (int)(baseSpell.GetManaCost() * manaMultiplier);
-    }
-
     protected override IEnumerator DoCast(Vector3 where, Vector3 target)
     {
+        // First normal cast
+        yield return baseSpell.Cast(where, target, team);
+
+        // Second cast at an angle
         Vector3 direction = (target - where).normalized;
         Vector3 rotatedDirection = Quaternion.Euler(0, 0, angle) * direction;
         Vector3 rotatedTarget = where + rotatedDirection;
-
-        yield return baseSpell.Cast(where, target, team);
+        
         yield return baseSpell.Cast(where, rotatedTarget, team);
     }
 
@@ -116,6 +114,7 @@ public class SplitterSpell : Spell
     public override int GetDamage() => baseSpell.GetDamage();
     public override float GetCooldown() => baseSpell.GetCooldown();
     public override int GetIcon() => baseSpell.GetIcon();
+    public override int GetManaCost() => (int)(baseSpell.GetManaCost() * manaMultiplier);
 }
 
 public class ChaosSpell : Spell
@@ -128,28 +127,24 @@ public class ChaosSpell : Spell
         this.baseSpell = spell;
     }
 
-    public override int GetDamage()
-    {
-        return (int)(baseSpell.GetDamage() * (1 * 0.5f));
-    }
-
     protected override IEnumerator DoCast(Vector3 where, Vector3 target)
     {
-        GameManager.Instance.projectileManager.CreateProjectile(
-            baseSpell.GetIcon(),
-            "spiraling",
-            where,
-            target - where,
-            baseSpell.GetProjectileSpeed(),
-            OnHit
-        );
-        yield return new WaitForEndOfFrame();
+        // First normal cast
+        yield return baseSpell.Cast(where, target, team);
+
+        // Second cast with random angle
+        float randomAngle = Random.Range(-45f, 45f);
+        Vector3 randomDirection = Quaternion.Euler(0, 0, randomAngle) * (target - where);
+        Vector3 randomizedTarget = where + randomDirection;
+        
+        yield return baseSpell.Cast(where, randomizedTarget, team);
     }
 
     public override string GetName() => "Chaotic " + baseSpell.GetName();
     public override int GetManaCost() => baseSpell.GetManaCost();
     public override float GetCooldown() => baseSpell.GetCooldown();
     public override int GetIcon() => baseSpell.GetIcon();
+    public override int GetDamage() => baseSpell.GetDamage();
 }
 
 public class HomingSpell : Spell

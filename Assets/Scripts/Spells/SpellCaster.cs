@@ -28,7 +28,7 @@ public class SpellCaster
         this.mana_reg = mana_reg;
         this.team = team;
         this.spellPower = spellPower;
-        spell = new SpellBuilder().Build(this);
+        spell = new SpellBuilder().Build(this, "arcane_bolt");
     }
 
     public IEnumerator Cast(Vector3 where, Vector3 target)

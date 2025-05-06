@@ -3,8 +3,14 @@ using System.Collections;
 
 public class MagicMissile : Spell
 {
-    public MagicMissile(SpellCaster owner) : base(owner)
+    public MagicMissile(SpellCaster caster) : base(caster)
     {
+        // Initialize magic missile specific properties
+    }
+
+    public override string GetName()
+    {
+        return "Magic Missile";
     }
 
     protected override void InitializeSpell()

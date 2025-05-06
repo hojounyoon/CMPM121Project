@@ -17,8 +17,6 @@ public class RewardScreen : MonoBehaviour
     public GameObject spell3;  // Arcane Blast
     public GameObject spell4;  // Arcane Spray
 
-    private string[] baseSpells = { "arcane_bolt", "magic_missile", "arcane_blast", "arcane_spray" };
-    private string[] modifierSpells = { "damage_amp", "speed_amp", "doubler", "splitter", "chaos", "homing" };
     private string generatedSpell;
 
     void Start()
@@ -30,10 +28,14 @@ public class RewardScreen : MonoBehaviour
     public void Show()
     {
         Debug.Log("RewardScreen Show() called");
-        
-        // Generate and display spell first
-        GenerateAndDisplaySpell();
-        
+
+        // Generate the spell using SpellBuilder
+        SpellBuilder builder = new SpellBuilder();
+        generatedSpell = builder.GenerateRandomSpell();
+
+        // Now display it
+        DisplaySpell(generatedSpell);
+
         // Make sure UI elements are enabled
         if (spellNameText != null) spellNameText.enabled = true;
         if (descriptionText != null) descriptionText.enabled = true;
@@ -46,127 +48,109 @@ public class RewardScreen : MonoBehaviour
         Canvas.ForceUpdateCanvases();
     }
 
-    void GenerateAndDisplaySpell()
+    public void DisplaySpell(string spellType)
     {
-        Debug.Log("GenerateAndDisplaySpell called");
-        
-        try
+        // Load spell data
+        TextAsset spellsJson = Resources.Load<TextAsset>("spells");
+        if (spellsJson == null)
         {
-            // Force UI elements to be enabled first
-            if (spellNameText != null) spellNameText.enabled = true;
-            if (descriptionText != null) descriptionText.enabled = true;
-            if (spellIcon != null) spellIcon.enabled = true;
-
-            // Generate base spell first and ENSURE it's set
-            string baseSpell = baseSpells[Random.Range(0, baseSpells.Length)];
-            generatedSpell = baseSpell;
-            Debug.Log($"Selected base spell: {baseSpell}");
-
-            // Load spell data
-            TextAsset spellsJson = Resources.Load<TextAsset>("spells");
-            if (spellsJson == null)
-            {
-                Debug.LogError("Failed to load spells.json!");
-                return;
-            }
-
-            JObject spells = JObject.Parse(spellsJson.text);
-            JObject baseSpellData = spells[baseSpell] as JObject;
-
-            // Immediately update UI with base spell info
-            string displayName = baseSpellData["name"].ToString();
-            string description = baseSpellData["description"].ToString();
-
-            // 50% chance to add modifier
-            if (Random.value < 0.5f)
-            {
-                string modifier = modifierSpells[Random.Range(0, modifierSpells.Length)];
-                generatedSpell = modifier + "_" + baseSpell;
-                
-                // Add modifier info to display
-                JObject modifierData = spells[modifier] as JObject;
-                displayName = modifierData["name"].ToString() + " " + displayName;
-                description += "\n" + modifierData["description"].ToString();
-                Debug.Log($"Added modifier: {modifier}");
-            }
-
-            // Force update UI elements and verify
-            Debug.Log($"Setting name to: {displayName}");
-            if (spellNameText != null)
-            {
-                spellNameText.text = displayName;
-                spellNameText.ForceMeshUpdate(); // Force text update
-                Debug.Log($"Spell name text component text is now: {spellNameText.text}");
-            }
-            else
-            {
-                Debug.LogError("spellNameText is null!");
-            }
-
-            Debug.Log($"Setting description to: {description}");
-            if (descriptionText != null)
-            {
-                descriptionText.text = description;
-                descriptionText.ForceMeshUpdate(); // Force text update
-                Debug.Log($"Description text component text is now: {descriptionText.text}");
-            }
-            else
-            {
-                Debug.LogError("descriptionText is null!");
-            }
-
-            if (spellIcon != null)
-            {
-                SetSpellIcon(baseSpell);
-            }
-            else
-            {
-                Debug.LogError("spellIcon Image component is null!");
-            }
-
-            // Force the UI to update
-            Canvas.ForceUpdateCanvases();
+            Debug.LogError("Failed to load spells.json!");
+            return;
         }
-        catch (System.Exception e)
+
+        JObject spells = JObject.Parse(spellsJson.text);
+
+        // Split the spellType to get base and modifiers
+        string[] parts = spellType.Split(' ');
+        string baseSpell = parts[parts.Length - 1];
+
+        JObject baseSpellData = spells[baseSpell] as JObject;
+        string displayName = baseSpellData["name"].ToString();
+        string description = baseSpellData["description"].ToString();
+
+        // Add modifiers to display if present
+        for (int i = 0; i < parts.Length - 1; i++)
         {
-            Debug.LogError($"Error in GenerateAndDisplaySpell: {e.Message}\n{e.StackTrace}");
+            string modifier = parts[i];
+            JObject modifierData = spells[modifier] as JObject;
+            displayName = modifierData["name"].ToString() + " " + displayName;
+            description += "\n" + modifierData["description"].ToString();
         }
+
+        // Set UI
+        if (spellNameText != null) spellNameText.text = displayName;
+        if (descriptionText != null) descriptionText.text = description;
+        if (spellIcon != null) SetSpellIcon(baseSpell);
+
+        Canvas.ForceUpdateCanvases();
     }
 
     void SetSpellIcon(string baseSpell)
     {
+        Debug.Log($"SetSpellIcon called for spell: {baseSpell}");
+        
+        // Log the state of our spell GameObjects
+        Debug.Log($"spell1 (Arcane Bolt) exists: {spell1 != null}");
+        Debug.Log($"spell2 (Magic Missile) exists: {spell2 != null}");
+        Debug.Log($"spell3 (Arcane Blast) exists: {spell3 != null}");
+        Debug.Log($"spell4 (Arcane Spray) exists: {spell4 != null}");
+
         // Get the Image component from the appropriate spell GameObject based on the spell type
         Image sourceImage = null;
         switch (baseSpell)
         {
             case "arcane_bolt":
-                sourceImage = spell1.GetComponent<Image>();
+                if (spell1 != null)
+                {
+                    sourceImage = spell1.GetComponent<Image>();
+                    Debug.Log("Found Arcane Bolt image component");
+                }
                 break;
             case "magic_missile":
-                sourceImage = spell2.GetComponent<Image>();
+                if (spell2 != null)
+                {
+                    sourceImage = spell2.GetComponent<Image>();
+                    Debug.Log("Found Magic Missile image component");
+                }
                 break;
             case "arcane_blast":
-                sourceImage = spell3.GetComponent<Image>();
+                if (spell3 != null)
+                {
+                    sourceImage = spell3.GetComponent<Image>();
+                    Debug.Log("Found Arcane Blast image component");
+                }
                 break;
             case "arcane_spray":
-                sourceImage = spell4.GetComponent<Image>();
+                if (spell4 != null)
+                {
+                    sourceImage = spell4.GetComponent<Image>();
+                    Debug.Log("Found Arcane Spray image component");
+                }
                 break;
         }
 
-        if (sourceImage != null && sourceImage.sprite != null)
+        if (sourceImage != null)
         {
-            spellIcon.sprite = sourceImage.sprite;
-            Debug.Log($"Set spell icon from {baseSpell} GameObject");
+            if (sourceImage.sprite != null)
+            {
+                spellIcon.sprite = sourceImage.sprite;
+                Debug.Log($"Successfully set spell icon from {baseSpell} GameObject");
+            }
+            else
+            {
+                Debug.LogError($"Found Image component for {baseSpell} but it has no sprite!");
+            }
         }
         else
         {
-            Debug.LogError($"Could not find sprite for {baseSpell}");
+            Debug.LogError($"Could not find Image component for {baseSpell}");
         }
     }
 
     public void OnAcceptClicked()
     {
         Debug.Log("Accept button clicked");
+        Debug.Log($"Generated spell type: {generatedSpell}"); // Log the spell we're trying to create
         
         PlayerController player = GameManager.Instance.player.GetComponent<PlayerController>();
         if (player == null)
@@ -199,6 +183,10 @@ public class RewardScreen : MonoBehaviour
             return;
         }
 
+        // Log more details about the new spell
+        Debug.Log($"New spell created: Type = {newSpell.GetType().Name}, Name = {newSpell.GetName()}");
+        Debug.Log($"Previous spell: Type = {player.spellcaster.spell.GetType().Name}, Name = {player.spellcaster.spell.GetName()}");
+
         // Store the old spell for comparison
         string oldSpellName = player.spellcaster.spell.GetName();
         
@@ -208,9 +196,8 @@ public class RewardScreen : MonoBehaviour
         // Update the spell UI
         player.spellui.SetSpell(newSpell);
 
+        // Verify the spell was actually changed
+        Debug.Log($"Final spell after assignment: Type = {player.spellcaster.spell.GetType().Name}, Name = {player.spellcaster.spell.GetName()}");
         Debug.Log($"Changed spell from {oldSpellName} to {newSpell.GetName()}");
-
-        // Don't hide the reward screen here - let the wave manager handle that
-        // Don't start next wave here - let the wave manager handle that
     }
 } 
