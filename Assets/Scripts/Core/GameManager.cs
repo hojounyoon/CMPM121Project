@@ -48,7 +48,7 @@ public class GameManager
             enemies = new List<GameObject>();
         }
         enemies.Add(enemy);
-        Debug.Log($"Enemy added. Total enemies: {enemies.Count}");
+        //Debug.Log($"Enemy added. Total enemies: {enemies.Count}");
     }
 
     public void RemoveEnemy(GameObject enemy)
@@ -56,7 +56,7 @@ public class GameManager
         if (enemies != null)
         {
             enemies.Remove(enemy);
-            Debug.Log($"Enemy removed. Total enemies: {enemies.Count}");
+            //Debug.Log($"Enemy removed. Total enemies: {enemies.Count}");
         }
     }
 

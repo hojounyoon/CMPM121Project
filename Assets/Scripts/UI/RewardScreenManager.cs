@@ -50,6 +50,7 @@ public class RewardScreenManager : MonoBehaviour
                 // Show spell reward screen
                 if (spellRewardScreen != null)
                 {
+                    Debug.Log("showing rewardscreen");
                     spellRewardScreen.Show();
                 }
             }

@@ -36,10 +36,8 @@ public class EnemySpawner : MonoBehaviour
     {
         string FileName = "Assets/Resources/enemies.json";
         string JsonString = File.ReadAllText(FileName);
-        print(JsonString);
         enemyList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Enemy>>(JsonString);
 
-        print(enemyList[1].name);
 
     }
 
@@ -54,10 +52,8 @@ public class EnemySpawner : MonoBehaviour
 
     public void LoadLevels()
     {
-        Debug.Log("LoadLevels called");
         // Load levels from JSON file
         string jsonText = File.ReadAllText(Application.dataPath + "/Resources/levels.json");
-        Debug.Log("Loaded JSON text: " + jsonText);
         JArray levelsArray = JArray.Parse(jsonText);
         levels = new List<JObject>();
 
@@ -66,15 +62,12 @@ public class EnemySpawner : MonoBehaviour
             levels.Add(levelObj);
         }
         List<int> sequence = levels[0]["spawns"][0]["sequence"].ToObject<List<int>>();
-        Debug.Log($"first level is {sequence.Count}");
-        Debug.Log($"Loaded {levels.Count} levels");
         // Create buttons for each level
         CreateLevelButtons();
     }
 
     void CreateLevelButtons()
     {
-        Debug.Log("CreateLevelButtons called");
         float buttonSpacing = 100f;
         float startY = 130f;
 
@@ -204,14 +197,14 @@ public class EnemySpawner : MonoBehaviour
             int totalSpawn = RPNCount(j);
             int currentlySpawn = 0;
             int amountToSpawn = 0;
-            Debug.Log($"spawning: {RPNCount(j)}");
+            //Debug.Log($"spawning: {RPNCount(j)}");
             while(totalSpawn > currentlySpawn)
             {
                 if(amountToSpawn > sequence.Count-1)
                 {
                     amountToSpawn = 0;
                 }
-                Debug.Log($"amount to spawn {amountToSpawn}");
+                //Debug.Log($"amount to spawn {amountToSpawn}");
                 for (int i = 0; i < sequence[amountToSpawn]; i++)
                 {
                     currentlySpawn++;
@@ -222,7 +215,7 @@ public class EnemySpawner : MonoBehaviour
                     }
                 }
                 amountToSpawn++;
-                Debug.Log("delaying");
+                //Debug.Log("delaying");
                 yield return new WaitForSeconds(delay);
                 //Debug.Log($"Spawned enemy. Total enemies: {GameManager.Instance.enemy_count}");
             }        
@@ -251,12 +244,12 @@ public class EnemySpawner : MonoBehaviour
         string[] tokens = words.Split(' ');
         foreach (var item in tokens)
         {
-            Debug.Log(item);
+            //Debug.Log(item);
         }
         int spot = -1;
         if (tokens.ElementAtOrDefault(1) == null)
         {
-            Debug.Log("anywhere");
+            //Debug.Log("anywhere");
             spot = Random.Range(0,7);
         }
         else if (tokens[1] == "green")
@@ -271,7 +264,6 @@ public class EnemySpawner : MonoBehaviour
         {
             spot = Random.Range(4, 7);
         }
-        Debug.Log(spot);
         SpawnPoint spawn_point = SpawnPoints[spot];
         Vector2 offset = Random.insideUnitCircle * 1.8f;
                 
@@ -437,7 +429,7 @@ public class EnemySpawner : MonoBehaviour
             }
             numStack.Push(tokens[i]);
         }
-        Debug.Log($"Count is: {val}");
+        //Debug.Log($"Count is: {val}");
         return val;
     }
 
@@ -641,7 +633,6 @@ public class EnemySpawner : MonoBehaviour
             }
             numStack.Push(tokens[i]);
         }
-        Debug.Log($"Count is: {val}");
         return val;
     }
 

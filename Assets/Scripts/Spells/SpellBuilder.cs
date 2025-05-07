@@ -6,6 +6,20 @@ using System.Collections.Generic;
 
 public class SpellBuilder 
 {
+
+    public List<Spell> spellList;
+
+    
+
+    public void LoadSpells() 
+    {
+        string FileName = "Assets/Resources/spells.json";
+        string JsonString = File.ReadAllText(FileName);
+        spellList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Spell>>(JsonString);
+        Debug.Log("lopading spells");
+        Debug.Log(spellList[1]);
+
+    }
     public Spell Build(SpellCaster caster, string spellType)
     {
         Debug.Log($"SpellBuilder.Build called with spellType: {spellType}");

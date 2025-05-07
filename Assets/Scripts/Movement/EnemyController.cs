@@ -64,7 +64,7 @@ public class EnemyController : MonoBehaviour
             
             // Destroy the game object
             Destroy(gameObject);
-            Debug.Log("Enemy destroyed and cleaned up");
+            //Debug.Log("Enemy destroyed and cleaned up");
         }
     }
 }
