@@ -113,7 +113,7 @@ public class EnemySpawner : MonoBehaviour
         {
             GameManager.Instance.totalWaves = totalWaves;
             totalWaves = level["waves"].Value<int>();
-            Debug.Log($"total waves is: {totalWaves}");
+            //Debug.Log($"total waves is: {totalWaves}");
         }
         GameManager.Instance.player.GetComponent<PlayerController>().StartLevel();
         StartCoroutine(SpawnWave());

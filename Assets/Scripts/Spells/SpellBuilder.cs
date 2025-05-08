@@ -9,23 +9,27 @@ public class SpellBuilder
 
     public List<Spell> spellList;
 
-    
-
     public void LoadSpells() 
     {
         string FileName = "Assets/Resources/spells_copy.json";
         string JsonString = File.ReadAllText(FileName);
         spellList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Spell>>(JsonString);
         Debug.Log("loading spells");
+        Debug.Log(spellList[0]);
     }
+
     public Spell Build(SpellCaster caster, string spellType)
     {
+        LoadSpells();
+        Debug.Log("loaded speels");
+
         Debug.Log($"SpellBuilder.Build called with spellType: {spellType}");
 
         // Split by space, not underscore
         string[] parts = spellType.Split(' ');
         string baseSpell = parts[parts.Length - 1];
         Spell spell = CreateBaseSpell(caster, baseSpell);
+        Debug.Log(spell.GetN());
 
         // Apply modifiers in order (if any)
         for (int i = 0; i < parts.Length - 1; i++)
@@ -44,18 +48,19 @@ public class SpellBuilder
         Debug.Log($"Creating base spell: {baseSpell}");
         switch (baseSpell)
         {
-            case "arcane_bolt":
-                return new ArcaneBolt(caster);
-            case "magic_missile":
-                return new MagicMissile(caster);
-            case "arcane_blast":
-                return new ArcaneBlast(caster);
-            case "arcane_spray":
-                return new ArcaneSpray(caster);
-            default:
-                Debug.LogError($"Unknown base spell type: {baseSpell}");
-                return new ArcaneBolt(caster); // Fallback
+            // case "arcane_bolt":
+            //     return new ArcaneBolt(caster);
+            // case "magic_missile":
+            //     return new MagicMissile(caster);
+            // case "arcane_blast":
+            //     return new ArcaneBlast(caster);
+            // case "arcane_spray":
+            //     return new ArcaneSpray(caster);
+            // default:
+            //     Debug.LogError($"Unknown base spell type: {baseSpell}");
+            //     return new ArcaneBolt(caster); // Fallback
         }
+        return new Spell(caster, spellList[1]);
     }
 
     private Spell ApplyModifier(Spell baseSpell, string modifier)

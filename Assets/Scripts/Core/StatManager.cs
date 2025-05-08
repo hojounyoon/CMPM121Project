@@ -34,7 +34,7 @@ public class StatManager : MonoBehaviour
     {
         GameManager.Instance.totalWaves = totalWaves;
         ResetStats();
-        Debug.Log("StatManager started. Initial points: " + totalPoints);
+        //Debug.Log("StatManager started. Initial points: " + totalPoints);
     }
 
     public void ResetStats()
@@ -47,7 +47,7 @@ public class StatManager : MonoBehaviour
         waveStartTime = Time.time;
         isWaveEnded = false;
         currentWave = 0;
-        Debug.Log("Stats reset. Points: " + totalPoints);
+        //Debug.Log("Stats reset. Points: " + totalPoints);
     }
 
     public void OnEnemyDefeated()
