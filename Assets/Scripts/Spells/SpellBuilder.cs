@@ -46,21 +46,18 @@ public class SpellBuilder
     private Spell CreateBaseSpell(SpellCaster caster, string baseSpell)
     {
         Debug.Log($"Creating base spell: {baseSpell}");
-        switch (baseSpell)
+     
+        // search through spell list to find the spell
+        // when found, return that spell with all the info
+        foreach (var spell in spellList)
         {
-            // case "arcane_bolt":
-            //     return new ArcaneBolt(caster);
-            // case "magic_missile":
-            //     return new MagicMissile(caster);
-            // case "arcane_blast":
-            //     return new ArcaneBlast(caster);
-            // case "arcane_spray":
-            //     return new ArcaneSpray(caster);
-            // default:
-            //     Debug.LogError($"Unknown base spell type: {baseSpell}");
-            //     return new ArcaneBolt(caster); // Fallback
+            if (spell.name == baseSpell)
+            {
+                return new Spell(caster, spell);
+            }
         }
-        return new Spell(caster, spellList[1]);
+        // spell is not found, returns arcane bolt
+        return new Spell(caster, spellList[0]);
     }
 
     private Spell ApplyModifier(Spell baseSpell, string modifier)
@@ -107,6 +104,8 @@ public class SpellBuilder
         Debug.Log($"Generated random spell name: {randomName}");    
         return randomName;
     }
+
+    
 
     public SpellBuilder()
     {        
