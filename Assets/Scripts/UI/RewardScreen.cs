@@ -68,6 +68,11 @@ public class RewardScreen : MonoBehaviour
         string baseSpell = parts[parts.Length - 1];
 
         JObject baseSpellData = spells[baseSpell] as JObject;
+        if (baseSpellData == null)
+        {
+            Debug.LogError($"Base spell data not found for {baseSpell}");
+            return;
+        }
         string displayName = baseSpellData["name"].ToString();
         string description = baseSpellData["description"].ToString();
 
@@ -202,5 +207,16 @@ public class RewardScreen : MonoBehaviour
         // Verify the spell was actually changed
         Debug.Log($"Final spell after assignment: Type = {player.spellcaster.spell.GetType().Name}, Name = {player.spellcaster.spell.GetName()}");
         Debug.Log($"Changed spell from {oldSpellName} to {newSpell.GetName()}");
+    }
+
+    void Update()
+    {
+        if (GameManager.Instance.state == GameManager.GameState.WAVEEND)
+        {
+            if (!gameObject.activeSelf)
+            {
+                Show();
+            }
+        }
     }
 } 

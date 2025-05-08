@@ -8,7 +8,7 @@ public class Spell
     public float last_cast;
     public SpellCaster owner;
     public Hittable.Team team;
-    protected string spellName;
+    public string name;
     protected string description;
     protected int icon;
     protected float cooldown;
@@ -27,7 +27,7 @@ public class Spell
     protected virtual void InitializeSpell()
     {
         // Default values, to be overridden by specific spells
-        spellName = "Default Spell";
+        name = "Default Spell";
         description = "Default description";
         icon = 0;
         cooldown = 2f;
@@ -40,7 +40,7 @@ public class Spell
 
     public virtual string GetName()
     {
-        return spellName;
+        return name;
     }
 
     public virtual int GetManaCost()

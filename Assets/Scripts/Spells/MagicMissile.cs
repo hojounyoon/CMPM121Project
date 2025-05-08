@@ -15,7 +15,7 @@ public class MagicMissile : Spell
 
     protected override void InitializeSpell()
     {
-        spellName = "Magic Missile";
+        name = "Magic Missile";
         description = "A homing bolt.";
         icon = 2;
         cooldown = 3f;

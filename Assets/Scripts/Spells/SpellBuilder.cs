@@ -13,12 +13,10 @@ public class SpellBuilder
 
     public void LoadSpells() 
     {
-        string FileName = "Assets/Resources/spells.json";
+        string FileName = "Assets/Resources/spells_copy.json";
         string JsonString = File.ReadAllText(FileName);
         spellList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Spell>>(JsonString);
-        Debug.Log("lopading spells");
-        Debug.Log(spellList[1]);
-
+        Debug.Log("loading spells");
     }
     public Spell Build(SpellCaster caster, string spellType)
     {
@@ -85,21 +83,24 @@ public class SpellBuilder
 
     public string GenerateRandomSpell()
     {
-        // You may want to pass in the arrays or make them static/shared
-        string[] baseSpells = { "arcane_bolt", "magic_missile", "arcane_blast", "arcane_spray" };
-        string[] modifierSpells = { "damage_amp", "speed_amp", "doubler", "splitter", "chaos", "homing" };
-
-        string baseSpell = baseSpells[Random.Range(0, baseSpells.Length)];
-        string spellType = baseSpell;
-
-        // 50% chance to add a random modifier (or more, if you want)
-        if (Random.value < 0.5f)
+        if (spellList == null || spellList.Count == 0)
         {
-            string modifier = modifierSpells[Random.Range(0, modifierSpells.Length)];
-            spellType = modifier + " " + baseSpell;
+            Debug.LogError("spellList is empty! Did you call LoadSpells()?");
+            return "arcane_bolt";
         }
 
-        return spellType;
+        // Get all spell names from spellList
+        List<string> allSpellNames = new List<string>();
+        foreach (var spell in spellList)
+        {
+            // Use the correct property for the spell name (e.g., spell.name or spell.id)
+            allSpellNames.Add(spell.name); // or spell.id if that's what you use
+        }
+
+        // Pick a random spell name
+        string randomName = allSpellNames[Random.Range(0, allSpellNames.Count)];
+        Debug.Log($"Generated random spell name: {randomName}");    
+        return randomName;
     }
 
     public SpellBuilder()

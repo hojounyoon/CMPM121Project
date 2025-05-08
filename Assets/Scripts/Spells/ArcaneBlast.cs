@@ -15,7 +15,7 @@ public class ArcaneBlast : Spell
 
     protected override void InitializeSpell()
     {
-        spellName = "Arcane Blast";
+        name = "Arcane Blast";
         description = "A short-range blast of arcane energy.";
         icon = 3;
         cooldown = 4f;

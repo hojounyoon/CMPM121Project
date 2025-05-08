@@ -9,7 +9,7 @@ public class ArcaneBolt : Spell
 
     protected override void InitializeSpell()
     {
-        spellName = "Arcane Bolt";
+        name = "Arcane Bolt";
         description = "A straight-flying bolt.";
         icon = 0;
         cooldown = 2f;

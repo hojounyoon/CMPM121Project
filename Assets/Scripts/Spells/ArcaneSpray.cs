@@ -15,7 +15,7 @@ public class ArcaneSpray : Spell
 
     protected override void InitializeSpell()
     {
-        spellName = "Arcane Spray";
+        name = "Arcane Spray";
         description = "A spray of arcane bolts in a cone.";
         icon = 4;
         cooldown = 5f;

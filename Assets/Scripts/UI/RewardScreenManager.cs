@@ -17,6 +17,7 @@ public class RewardScreenManager : MonoBehaviour
     private float currentWaveTime;
     private int lastEnemyCount;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -56,6 +57,7 @@ public class RewardScreenManager : MonoBehaviour
             }
 
             rewardUI.SetActive(true);
+            OnWaveComplete();
             UpdateStats();
         }
         else if (GameManager.Instance.state == GameManager.GameState.INWAVE)
@@ -119,4 +121,15 @@ public class RewardScreenManager : MonoBehaviour
         // Start next wave
         GameManager.Instance.StartNextWave();
     }
+
+    public void OnWaveComplete()
+    {
+        // Generate and display a new spell
+        spellRewardScreen.Show();
+
+        // Make the reward UI visible
+        rewardUI.SetActive(true);
+    }
+
+
 }
