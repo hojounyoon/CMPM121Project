@@ -34,7 +34,7 @@ public class GameOverManager : MonoBehaviour
             victoryRestartButton.onClick.AddListener(RestartFromVictory);
         }
         
-        Debug.Log("GameOverManager initialized");
+        //Debug.Log("GameOverManager initialized");
     }
 
     void Update()

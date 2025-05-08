@@ -23,8 +23,7 @@ public class RewardScreen : MonoBehaviour
     {
         // Only hide the screen at start, don't generate spell yet
         gameObject.SetActive(false);
-        SpellBuilder builder = new SpellBuilder();
-        builder.LoadSpells();
+        
     }
 
     public void Show()

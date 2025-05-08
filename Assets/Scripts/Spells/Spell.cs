@@ -17,25 +17,49 @@ public class Spell
     protected string projectileTrajectory;
     protected float projectileSpeed;
     protected int projectileSprite;
+    protected int N;
+
 
     public Spell(SpellCaster owner)
     {
         this.owner = owner;
-        InitializeSpell();
+    }
+
+    public Spell(SpellCaster owner, Spell spellInfo)
+    {
+        this.owner = owner;
+        InitializeSpell(spellInfo);
+    }
+    
+    public Spell()
+    {
+
+    }
+
+    protected virtual void InitializeSpell(Spell spellInfo)
+    {
+        //Default values, to be overridden by specific spells
+        name = spellInfo.name;
+        description = spellInfo.description;
+        icon = spellInfo.icon;
+        cooldown = spellInfo.cooldown;
+        manaCost = spellInfo.manaCost;
+        baseDamage = spellInfo.baseDamage;
+        projectileTrajectory = spellInfo.projectileTrajectory;
+        projectileSpeed = spellInfo.projectileSpeed;
+        projectileSprite = spellInfo.projectileSprite;
+        N = spellInfo.N;
+
+        
+        Debug.Log("spell initalized and info filled");
     }
 
     protected virtual void InitializeSpell()
     {
-        // Default values, to be overridden by specific spells
-        name = "Default Spell";
-        description = "Default description";
-        icon = 0;
-        cooldown = 2f;
-        manaCost = 10;
-        baseDamage = 25;
-        projectileTrajectory = "straight";
-        projectileSpeed = 8f;
-        projectileSprite = 0;
+        //Default values, to be overridden by specific spells
+        
+        
+        Debug.Log("spell initalized with nothing in it");
     }
 
     public virtual string GetName()
@@ -61,6 +85,11 @@ public class Spell
     public virtual int GetIcon()
     {
         return icon;
+    }
+
+    public virtual int GetN()
+    {
+        return N;
     }
 
     public bool IsReady()
