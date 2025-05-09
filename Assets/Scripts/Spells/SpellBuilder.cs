@@ -3,6 +3,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SpellBuilder 
 {
@@ -91,18 +92,26 @@ public class SpellBuilder
             return "arcane_bolt";
         }
 
-        // Get all spell names from spellList
-        List<string> allSpellNames = new List<string>();
-        foreach (var spell in spellList)
+        // Get all base spells (first 4 spells in the list)
+        var baseSpells = spellList.Take(4).ToList();
+        if (baseSpells.Count == 0)
         {
-            // Use the correct property for the spell name (e.g., spell.name or spell.id)
-            allSpellNames.Add(spell.name); // or spell.id if that's what you use
+            Debug.LogError("No base spells found in spellList!");
+            return "arcane_bolt";
         }
 
-        // Pick a random spell name
-        string randomName = allSpellNames[Random.Range(0, allSpellNames.Count)];
-        Debug.Log($"Generated random spell name: {randomName}");    
-        return randomName;
+        // Pick a random base spell
+        string baseSpell = baseSpells[Random.Range(0, baseSpells.Count)].name;
+        
+        // Get all modifiers (remaining spells in the list)
+        var modifiers = spellList.Skip(4).ToList();
+        if (modifiers.Count > 0 && Random.value > 0.5f) // 50% chance to add a modifier
+        {
+            string modifier = modifiers[Random.Range(0, modifiers.Count)].name;
+            return $"{modifier} {baseSpell}";
+        }
+
+        return baseSpell;
     }
 
     

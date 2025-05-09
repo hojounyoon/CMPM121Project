@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 public class RewardScreen : MonoBehaviour
 {
@@ -17,7 +18,10 @@ public class RewardScreen : MonoBehaviour
     public GameObject spell3;  // Arcane Blast
     public GameObject spell4;  // Arcane Spray
 
+    [SerializeField] private Image homingSpellIcon; // Make sure this is assigned in the Inspector
+
     private string generatedSpell;
+    private bool hasGeneratedSpell = false;  // Add this field
 
     void Start()
     {
@@ -28,14 +32,25 @@ public class RewardScreen : MonoBehaviour
 
     public void Show()
     {
+        // Don't show if already active
+        if (gameObject.activeSelf)
+        {
+            return;
+        }
+
         Debug.Log("RewardScreen Show() called");
 
-        // Generate the spell using SpellBuilder
-        SpellBuilder builder = new SpellBuilder();
-        builder.LoadSpells();
-        generatedSpell = builder.GenerateRandomSpell();
+        // Only generate a new spell if we haven't generated one yet
+        if (!hasGeneratedSpell)
+        {
+            // Generate the spell using SpellBuilder
+            SpellBuilder builder = new SpellBuilder();
+            builder.LoadSpells();
+            generatedSpell = builder.GenerateRandomSpell();
+            hasGeneratedSpell = true;  // Mark that we've generated a spell
+        }
 
-        // Now display it
+        // Display the existing spell
         DisplaySpell(generatedSpell);
 
         // Make sure UI elements are enabled
@@ -52,26 +67,36 @@ public class RewardScreen : MonoBehaviour
 
     public void DisplaySpell(string spellType)
     {
+        Debug.Log($"DisplaySpell called with spellType: {spellType}");
+        
         // Load spell data
-        TextAsset spellsJson = Resources.Load<TextAsset>("spells");
+        TextAsset spellsJson = Resources.Load<TextAsset>("spells_copy");
         if (spellsJson == null)
         {
             Debug.LogError("Failed to load spells.json!");
             return;
         }
 
-        JObject spells = JObject.Parse(spellsJson.text);
+        // Parse as JArray instead of JObject
+        JArray spells = JArray.Parse(spellsJson.text);
 
         // Split the spellType to get base and modifiers
         string[] parts = spellType.Split(' ');
         string baseSpell = parts[parts.Length - 1];
+        
+        Debug.Log($"Parsed base spell: {baseSpell}");
 
-        JObject baseSpellData = spells[baseSpell] as JObject;
+        // Find the base spell in the array
+        JObject baseSpellData = spells.FirstOrDefault(s => 
+            s["name"].ToString() == baseSpell && 
+            s["type"].ToString() == "base") as JObject;
+
         if (baseSpellData == null)
         {
-            Debug.LogError($"Base spell data not found for {baseSpell}");
+            Debug.LogError($"Base spell data not found for {baseSpell} or it's not a base spell. Make sure it exists in spells.json and has type 'base'");
             return;
         }
+
         string displayName = baseSpellData["name"].ToString();
         string description = baseSpellData["description"].ToString();
 
@@ -79,7 +104,15 @@ public class RewardScreen : MonoBehaviour
         for (int i = 0; i < parts.Length - 1; i++)
         {
             string modifier = parts[i];
-            JObject modifierData = spells[modifier] as JObject;
+            JObject modifierData = spells.FirstOrDefault(s => 
+                s["name"].ToString() == modifier && 
+                s["type"].ToString() == "modifier") as JObject;
+
+            if (modifierData == null)
+            {
+                Debug.LogError($"Modifier data not found for {modifier} or it's not a modifier");
+                continue;
+            }
             displayName = modifierData["name"].ToString() + " " + displayName;
             description += "\n" + modifierData["description"].ToString();
         }
@@ -92,7 +125,7 @@ public class RewardScreen : MonoBehaviour
         Canvas.ForceUpdateCanvases();
     }
 
-    void SetSpellIcon(string baseSpell)
+    private void SetSpellIcon(string baseSpell)
     {
         Debug.Log($"SetSpellIcon called for spell: {baseSpell}");
         
@@ -182,6 +215,7 @@ public class RewardScreen : MonoBehaviour
         
         // Create the new spell
         SpellBuilder builder = new SpellBuilder();
+        builder.LoadSpells(); // Make sure spells are loaded
         Spell newSpell = builder.Build(player.spellcaster, generatedSpell);
         
         if (newSpell == null)
@@ -201,21 +235,32 @@ public class RewardScreen : MonoBehaviour
         player.spellcaster.spell = newSpell;
         
         // Update the spell UI
-        player.spellui.SetSpell(newSpell);
+        if (player.spellui != null)
+        {
+            player.spellui.SetSpell(newSpell);
+        }
+        else
+        {
+            Debug.LogError("RewardScreen: Player's spellui is null!");
+        }
 
         // Verify the spell was actually changed
         Debug.Log($"Final spell after assignment: Type = {player.spellcaster.spell.GetType().Name}, Name = {player.spellcaster.spell.GetName()}");
         Debug.Log($"Changed spell from {oldSpellName} to {newSpell.GetName()}");
+
+        // Reset the generated spell flag so next time we show the screen we'll generate a new spell
+        hasGeneratedSpell = false;
+        
+        // Hide the screen
+        gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if (GameManager.Instance.state == GameManager.GameState.WAVEEND)
+        // Only show the screen if we're at wave end AND the screen is not active
+        if (GameManager.Instance.state == GameManager.GameState.WAVEEND && !gameObject.activeSelf)
         {
-            if (!gameObject.activeSelf)
-            {
-                Show();
-            }
+            Show();
         }
     }
 } 

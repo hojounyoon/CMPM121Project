@@ -1,6 +1,7 @@
 [
    {
        "name": "arcane_bolt",
+       "type": "base",
        "description": "A straight-flying bolt.",
        "icon": 0,
        "damage": {"amount": "25 power 5 / +", "type": "arcane"},
@@ -10,6 +11,7 @@
    },
    {
        "name": "magic_missile",
+       "type": "base",
        "description": "A homing bolt.",
        "icon": 2,
        "damage": {"amount": "10 power 3 / +", "type": "arcane"},
@@ -19,6 +21,7 @@
    },
    {
        "name": "arcane_blast",
+       "type": "base",
        "description": "A bolt that explodes into smaller bolts on impact.",
        "icon": 2,
        "N": "8 power 5 / +",
@@ -31,6 +34,7 @@
    },
    {
        "name": "arcane_spray",
+       "type": "base",
        "description": "A large number of short-range bolts in a cone.",
        "icon": 1,
        "N": "7 power 25 / +",
@@ -42,17 +46,20 @@
    },
    {
        "name": "damage-amplified",
+       "type": "modifier",
        "description": "Increased damage and increased mana cost.",
        "damage_multiplier": "1.5",
        "mana_multiplier": "1.5"
    },
    {
        "name": "speed-amplified",
+       "type": "modifier",
        "description": "Faster projectile speed",
        "speed_multiplier": "1.75"
    },
    {
        "name": "doubled",
+       "type": "modifier",
        "description": "Spell is cast a second time after a small delay; increased mana cost and cooldown.",
        "delay": "0.5",
        "mana_multiplier": "1.5",
@@ -60,18 +67,21 @@
    },
    {
        "name": "split",
+       "type": "modifier",
        "description": "Spell is cast twice in slightly different directions; increased mana cost.",
        "angle": "10",
        "mana_multiplier": "1.5"
    },
    {
        "name": "chaotic",
+       "type": "modifier",
        "description": "Significantly increased damage, but projectile is spiraling.",
        "damage_multiplier": "1.5 wave 5 / +",
        "projectile_trajectory": "spiraling"
    },
    {
        "name": "homing",
+       "type": "modifier",
        "description": "Homing projectile, with decreased damage and increased mana cost.",
        "damage_multiplier": "0.75",
        "mana_adder": "10",
