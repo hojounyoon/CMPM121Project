@@ -21,8 +21,8 @@ public class MagicMissile : Spell
         cooldown = 3f;
         manaCost = 20;
         baseDamage = 10;
-        projectileTrajectory = "homing";
-        projectileSpeed = 10f;
+        projectile.trajectory = "homing";
+        projectile.speedEval = 10f;
         projectileSprite = 0;
     }
 
