@@ -15,8 +15,8 @@ public class ArcaneBolt : Spell
         cooldown = 2f;
         manaCost = 10;
         baseDamage = 25;
-        projectileTrajectory = "straight";
-        projectileSpeed = 8f;
+        projectile.trajectory = "straight";
+        projectile.speedEval = 8f;
         projectileSprite = 0;
     }
 
@@ -27,6 +27,6 @@ public class ArcaneBolt : Spell
 
     public override float GetProjectileSpeed()
     {
-        return projectileSpeed * (1 + owner.spellPower / 5f);
+        return projectile.speedEval * (1 + owner.spellPower / 5f);
     }
 } 

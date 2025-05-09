@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
 
 public class Spell 
 {
@@ -14,11 +16,26 @@ public class Spell
     protected float cooldown;
     protected int manaCost;
     protected int baseDamage;
-    protected string projectileTrajectory;
-    protected float projectileSpeed;
+    //protected string projectileTrajectory;
+    //protected float projectileSpeed;
     protected int projectileSprite;
     protected int N;
+    protected class Projectile
+    {
+        public string trajectory = "straight";
+        public string speed;
+        public float speedEval = 0f;
+        public int sprite;
+    }
+    protected Projectile projectile = new Projectile();
 
+    public class SpellDamage
+    {
+        public int amountEval = 0;
+        public string amount;
+        public string type;
+    }
+    public SpellDamage damage = new SpellDamage();
 
     public Spell(SpellCaster owner)
     {
@@ -38,18 +55,34 @@ public class Spell
 
     protected virtual void InitializeSpell(Spell spellInfo)
     {
+
         //Default values, to be overridden by specific spells
-        name = spellInfo.name;
-        description = spellInfo.description;
+        name = "Default Spell";
+        description = "Default description";
+        icon = 0;
+        cooldown = 2f;
+        manaCost = 10;
+        baseDamage = 25;
+        projectile.trajectory = "straight";
+        projectile.speedEval = 8f;
+        projectileSprite = 0;
+
+        // override the info(could be done better)
+        name = spellInfo.name ?? "No Name";
+        description = spellInfo.description ?? "No description";
         icon = spellInfo.icon;
         cooldown = spellInfo.cooldown;
         manaCost = spellInfo.manaCost;
-        baseDamage = spellInfo.baseDamage;
-        projectileTrajectory = spellInfo.projectileTrajectory;
-        projectileSpeed = spellInfo.projectileSpeed;
+        baseDamage = spellInfo.damage.amountEval;
+        projectile.trajectory = spellInfo.projectile.trajectory ?? "straight";
+        projectile.speedEval = 8f;
         projectileSprite = spellInfo.projectileSprite;
         N = spellInfo.N;
 
+
+        Debug.Log(projectile.trajectory);
+
+        
         
         Debug.Log("spell initalized and info filled");
     }
@@ -108,10 +141,10 @@ public class Spell
     {
         GameManager.Instance.projectileManager.CreateProjectile(
             projectileSprite, 
-            projectileTrajectory, 
+            projectile.trajectory, 
             where, 
             target - where, 
-            projectileSpeed, 
+            projectile.speedEval, 
             OnHit
         );
         yield return new WaitForEndOfFrame();
@@ -127,6 +160,11 @@ public class Spell
 
     public virtual float GetProjectileSpeed()
     {
-        return projectileSpeed;
+        return projectile.speedEval;
+    }
+
+    protected int RPN()
+    {
+        return 0;
     }
 }
