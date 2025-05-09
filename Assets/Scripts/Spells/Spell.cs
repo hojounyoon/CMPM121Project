@@ -77,7 +77,7 @@ public class Spell
         icon = spellInfo.icon;
         cooldown = spellInfo.cooldown;
         manaCost = spellInfo.manaCost;
-        baseDamage = spellInfo.damage.amountEval;
+        baseDamage = RPN(spellInfo.damage.amount);
         projectile.trajectory = spellInfo.projectile.trajectory ?? "straight";
         projectile.speedEval = RPN(spellInfo.projectile.speed);
         projectileSprite = spellInfo.projectileSprite;
