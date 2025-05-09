@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Unity.VisualScripting;
 using System.Runtime.CompilerServices;
+using System.Linq;
+using Newtonsoft.Json;
+using System.IO;
+using UnityEngine.UI;
 
 public class Spell 
 {
@@ -20,14 +24,14 @@ public class Spell
     //protected float projectileSpeed;
     protected int projectileSprite;
     protected int N;
-    protected class Projectile
+    public class Projectile
     {
         public string trajectory = "straight";
         public string speed;
         public float speedEval = 0f;
         public int sprite;
     }
-    protected Projectile projectile = new Projectile();
+    public Projectile projectile = new();
 
     public class SpellDamage
     {
@@ -35,7 +39,7 @@ public class Spell
         public string amount;
         public string type;
     }
-    public SpellDamage damage = new SpellDamage();
+    public SpellDamage damage = new();
 
     public Spell(SpellCaster owner)
     {
@@ -75,12 +79,12 @@ public class Spell
         manaCost = spellInfo.manaCost;
         baseDamage = spellInfo.damage.amountEval;
         projectile.trajectory = spellInfo.projectile.trajectory ?? "straight";
-        projectile.speedEval = 8f;
+        projectile.speedEval = RPN(spellInfo.projectile.speed);
         projectileSprite = spellInfo.projectileSprite;
         N = spellInfo.N;
 
+        Debug.Log($"speed is {projectile.speedEval}");
 
-        Debug.Log(projectile.trajectory);
 
         
         
@@ -163,8 +167,157 @@ public class Spell
         return projectile.speedEval;
     }
 
-    protected int RPN()
+    protected int RPN(string text)
     {
-        return 0;
+        int val = 0;
+        Stack<string> numStack = new Stack<string>();
+        string[] tokens = text.Split(' ');
+        Debug.Log(owner.spellPower);
+        if (tokens.Count() == 1)
+        {
+            return System.Int32.Parse(tokens[0]); 
+        }
+
+        for (int i = 0; i < tokens.Count(); i++) 
+        {
+            if (tokens[i] == "+" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "power")
+                {
+                    val2 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "power")
+                {
+                    val1 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                Debug.Log($"val1 is: {val1} val 2 is: {val2}");
+                val = val1 + val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "-" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "power")
+                {
+                    val2 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "power")
+                {
+                    val1 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 - val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "*" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "power")
+                {
+                    val2 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "power")
+                {
+                    val1 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 * val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "/" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "power")
+                {
+                    val2 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "power")
+                {
+                    val1 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 / val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "%" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "power")
+                {
+                    val2 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "power")
+                {
+                    val1 = owner.spellPower + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 % val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            numStack.Push(tokens[i]);
+        }
+        return val;
+     
     }
 }
