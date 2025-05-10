@@ -320,4 +320,9 @@ public class Spell
         return val;
      
     }
+
+    public virtual void Cast(Vector3 position, Vector3 direction)
+    {
+        // Base casting behavior
+    }
 }

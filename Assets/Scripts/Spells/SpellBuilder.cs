@@ -48,17 +48,38 @@ public class SpellBuilder
     {
         Debug.Log($"Creating base spell: {baseSpell}");
      
-        // search through spell list to find the spell
-        // when found, return that spell with all the info
+        // Find the spell data in the list
+        Spell spellData = null;
         foreach (var spell in spellList)
         {
             if (spell.name == baseSpell)
             {
-                return new Spell(caster, spell);
+                spellData = spell;
+                break;
             }
         }
-        // spell is not found, returns arcane bolt
-        return new Spell(caster, spellList[0]);
+
+        if (spellData == null)
+        {
+            Debug.LogError($"Base spell data not found for {baseSpell}, defaulting to arcane_bolt");
+            return new Spell(caster, spellList[0]);
+        }
+
+        // Create the appropriate spell type based on the base spell name
+        switch (baseSpell)
+        {
+            case "arcane_bolt":
+                return new Spell(caster, spellData);
+            case "magic_missile":
+                return new MagicMissileSpell(caster, spellData);
+            case "arcane_blast":
+                return new ArcaneBlastSpell(caster, spellData);
+            case "arcane_spray":
+                return new ArcaneSpraySpell(caster, spellData);
+            default:
+                Debug.LogError($"Unknown base spell type: {baseSpell}, defaulting to arcane_bolt");
+                return new Spell(caster, spellList[0]);
+        }
     }
 
     private Spell ApplyModifier(Spell baseSpell, string modifier)
@@ -66,15 +87,15 @@ public class SpellBuilder
         Debug.Log($"Applying modifier {modifier} to {baseSpell.GetName()}");
         switch (modifier)
         {
-            case "damage_amp":
+            case "damage-amplified":
                 return new DamageAmplifiedSpell(baseSpell);
-            case "speed_amp":
+            case "speed-amplified":
                 return new SpeedAmplifiedSpell(baseSpell);
-            case "doubler":
+            case "doubled":
                 return new DoublerSpell(baseSpell);
-            case "splitter":
+            case "split":
                 return new SplitterSpell(baseSpell);
-            case "chaos":
+            case "chaotic":
                 return new ChaosSpell(baseSpell);
             case "homing":
                 return new HomingSpell(baseSpell);
@@ -120,3 +141,4 @@ public class SpellBuilder
     {        
     }
 }
+

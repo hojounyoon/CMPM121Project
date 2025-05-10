@@ -92,6 +92,15 @@ public class GameOverManager : MonoBehaviour
 
     public void RestartGame()
     {
+        // Start the coroutine from this MonoBehaviour instead of GameManager
+        StartCoroutine(RestartGameCoroutine());
+    }
+
+    private IEnumerator RestartGameCoroutine()
+    {
+        // Your restart game logic here
+        yield return new WaitForSeconds(1f);
+        
         Debug.Log("Restarting game...");
         
         // Reset the StatManager
