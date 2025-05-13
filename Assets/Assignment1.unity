@@ -899,7 +899,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rewardUI: {fileID: 1709288111}
-  spellRewardScreen: {fileID: 0}
+  spellRewardScreen: {fileID: 1709288115}
   timeText: {fileID: 41077012}
   healthText: {fileID: 1747540884}
   pointsText: {fileID: 1464770445}
@@ -6596,10 +6596,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1658848931}
   spellIcon: {fileID: 334187435}
   acceptButton: {fileID: 356957659}
-  spell1: {fileID: 0}
-  spell2: {fileID: 0}
-  spell3: {fileID: 0}
-  spell4: {fileID: 0}
+  homingSpellIcon: {fileID: 0}
 --- !u!1 &1718273950
 GameObject:
   m_ObjectHideFlags: 0
