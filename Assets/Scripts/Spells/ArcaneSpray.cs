@@ -20,7 +20,6 @@ public class ArcaneSpray : Spell
         cooldown = 5f;
         manaCost = 30;
         baseDamage = 8;
-        N = 5;
         projectile.trajectory = "spread";
         projectile.speedEval = 12f;
         projectileSprite = 0;
