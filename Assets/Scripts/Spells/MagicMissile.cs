@@ -5,7 +5,6 @@ public class MagicMissile : Spell
 {
     public MagicMissile(SpellCaster caster) : base(caster)
     {
-        // Initialize magic missile specific properties
     }
 
     public override string GetName()

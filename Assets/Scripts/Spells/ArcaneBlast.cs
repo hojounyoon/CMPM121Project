@@ -5,7 +5,6 @@ public class ArcaneBlast : Spell
 {
     public ArcaneBlast(SpellCaster caster) : base(caster)
     {
-        // Initialize arcane blast specific properties
     }
 
     public override string GetName()
@@ -21,6 +20,7 @@ public class ArcaneBlast : Spell
         cooldown = 4f;
         manaCost = 25;
         baseDamage = 15;
+        N = 8;
         projectile.trajectory = "straight";
         projectile.speedEval = 8f;
         projectileSprite = 0;

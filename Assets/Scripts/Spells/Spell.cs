@@ -24,6 +24,7 @@ public class Spell
     //protected float projectileSpeed;
     protected int projectileSprite;
     protected int N;
+    protected JObject data;
     public class Projectile
     {
         public string trajectory = "straight";
@@ -59,7 +60,6 @@ public class Spell
 
     protected virtual void InitializeSpell(Spell spellInfo)
     {
-
         //Default values, to be overridden by specific spells
         name = "Default Spell";
         description = "Default description";
@@ -70,7 +70,11 @@ public class Spell
         projectile.trajectory = "straight";
         projectile.speedEval = 8f;
         projectileSprite = 0;
+        N = 0;
 
+        // Add debug logging for N value
+        Debug.Log($"Initializing spell {spellInfo.name} with N value: {spellInfo.N}");
+        
         // override the info(could be done better)
         name = spellInfo.name ?? "No Name";
         description = spellInfo.description ?? "No description";
@@ -81,14 +85,33 @@ public class Spell
         projectile.trajectory = spellInfo.projectile.trajectory ?? "straight";
         projectile.speedEval = RPN(spellInfo.projectile.speed);
         projectileSprite = spellInfo.projectileSprite;
-        N = spellInfo.N;
-
-        Debug.Log($"speed is {projectile.speedEval}");
-
-
         
-        
-        Debug.Log("spell initalized and info filled");
+        // Get N value from data if it exists
+        if (spellInfo.data != null && spellInfo.data.ContainsKey("N"))
+        {
+            var nValue = spellInfo.data["N"];
+            if (nValue.Type == JTokenType.String)
+            {
+                N = RPN(nValue.ToString());
+                Debug.Log($"Evaluated N value from RPN: {nValue} = {N}");
+            }
+            else
+            {
+                N = nValue.Value<int>();
+                Debug.Log($"Using direct N value: {N}");
+            }
+        }
+        else
+        {
+            N = spellInfo.N;
+        }
+
+        // Initialize the data field
+        data = new JObject();
+        data["N"] = N;
+
+        Debug.Log($"Final N value after initialization: {N}");
+        Debug.Log($"Data object N value: {data["N"]}");
     }
 
     protected virtual void InitializeSpell()
@@ -126,7 +149,14 @@ public class Spell
 
     public virtual int GetN()
     {
-        return N;
+        if (data != null && data.ContainsKey("N"))
+        {
+            int n = data["N"].Value<int>();
+            Debug.Log($"GetN() called for {GetName()}, returning {n}");
+            return n;
+        }
+        Debug.LogWarning($"GetN() called for {GetName()}, but N value not found in spell data");
+        return 0;
     }
 
     public bool IsReady()

@@ -12,12 +12,6 @@ public class RewardScreen : MonoBehaviour
     public Image spellIcon;                  // Drag your spell icon Image here
     public Button acceptButton;              // Drag your accept button here
 
-    // Add references to your existing spell GameObjects
-    public GameObject spell1;  // Arcane Bolt
-    public GameObject spell2;  // Magic Missile
-    public GameObject spell3;  // Arcane Blast
-    public GameObject spell4;  // Arcane Spray
-
     [SerializeField] private Image homingSpellIcon; // Make sure this is assigned in the Inspector
 
     private string generatedSpell;
@@ -28,6 +22,13 @@ public class RewardScreen : MonoBehaviour
         // Only hide the screen at start, don't generate spell yet
         gameObject.SetActive(false);
         
+        // Debug: List all resources in the Resources folder
+        Object[] allResources = Resources.LoadAll("");
+        Debug.Log("All resources in Resources folder:");
+        foreach (Object resource in allResources)
+        {
+            Debug.Log($"Resource: {resource.name} of type {resource.GetType()}");
+        }
     }
 
     public void Show()
@@ -69,11 +70,11 @@ public class RewardScreen : MonoBehaviour
     {
         Debug.Log($"DisplaySpell called with spellType: {spellType}");
         
-        // Load spell data
+        // Load spell data from spells_copy.json
         TextAsset spellsJson = Resources.Load<TextAsset>("spells_copy");
         if (spellsJson == null)
         {
-            Debug.LogError("Failed to load spells.json!");
+            Debug.LogError("Failed to load spells_copy.json!");
             return;
         }
 
@@ -129,61 +130,48 @@ public class RewardScreen : MonoBehaviour
     {
         Debug.Log($"SetSpellIcon called for spell: {baseSpell}");
         
-        // Log the state of our spell GameObjects
-        Debug.Log($"spell1 (Arcane Bolt) exists: {spell1 != null}");
-        Debug.Log($"spell2 (Magic Missile) exists: {spell2 != null}");
-        Debug.Log($"spell3 (Arcane Blast) exists: {spell3 != null}");
-        Debug.Log($"spell4 (Arcane Spray) exists: {spell4 != null}");
-
-        // Get the Image component from the appropriate spell GameObject based on the spell type
-        Image sourceImage = null;
-        switch (baseSpell)
+        // Try different possible paths for the sprite
+        string[] possiblePaths = new string[]
         {
-            case "arcane_bolt":
-                if (spell1 != null)
-                {
-                    sourceImage = spell1.GetComponent<Image>();
-                    Debug.Log("Found Arcane Bolt image component");
-                }
-                break;
-            case "magic_missile":
-                if (spell2 != null)
-                {
-                    sourceImage = spell2.GetComponent<Image>();
-                    Debug.Log("Found Magic Missile image component");
-                }
-                break;
-            case "arcane_blast":
-                if (spell3 != null)
-                {
-                    sourceImage = spell3.GetComponent<Image>();
-                    Debug.Log("Found Arcane Blast image component");
-                }
-                break;
-            case "arcane_spray":
-                if (spell4 != null)
-                {
-                    sourceImage = spell4.GetComponent<Image>();
-                    Debug.Log("Found Arcane Spray image component");
-                }
-                break;
-        }
+            $"SpellIcons/{baseSpell}",           // SpellIcons/arcane_spray
+            $"UI/SpellIcons/{baseSpell}",        // UI/SpellIcons/arcane_spray
+            $"Icons/{baseSpell}",                // Icons/arcane_spray
+            $"Spells/{baseSpell}",               // Spells/arcane_spray
+            baseSpell                            // arcane_spray
+        };
 
-        if (sourceImage != null)
+        Sprite spellSprite = null;
+        foreach (string path in possiblePaths)
         {
-            if (sourceImage.sprite != null)
+            // Try loading as Sprite first
+            spellSprite = Resources.Load<Sprite>(path);
+            
+            // If that fails, try loading as Texture2D and converting to Sprite
+            if (spellSprite == null)
             {
-                spellIcon.sprite = sourceImage.sprite;
-                Debug.Log($"Successfully set spell icon from {baseSpell} GameObject");
+                Texture2D texture = Resources.Load<Texture2D>(path);
+                if (texture != null)
+                {
+                    spellSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    Debug.Log($"Found texture at path: {path} and converted to sprite");
+                    break;
+                }
             }
             else
             {
-                Debug.LogError($"Found Image component for {baseSpell} but it has no sprite!");
+                Debug.Log($"Found sprite at path: {path}");
+                break;
             }
+        }
+        
+        if (spellSprite != null)
+        {
+            spellIcon.sprite = spellSprite;
+            Debug.Log($"Successfully set spell icon for {baseSpell}");
         }
         else
         {
-            Debug.LogError($"Could not find Image component for {baseSpell}");
+            Debug.LogError($"Could not find sprite or texture for {baseSpell}. Tried paths: {string.Join(", ", possiblePaths)}");
         }
     }
 
