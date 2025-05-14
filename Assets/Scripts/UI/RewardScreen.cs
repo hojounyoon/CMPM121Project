@@ -27,7 +27,6 @@ public class RewardScreen : MonoBehaviour
         Debug.Log("All resources in Resources folder:");
         foreach (Object resource in allResources)
         {
-            Debug.Log($"Resource: {resource.name} of type {resource.GetType()}");
         }
     }
 
@@ -69,7 +68,7 @@ public class RewardScreen : MonoBehaviour
     public void DisplaySpell(string spellType)
     {
         Debug.Log($"DisplaySpell called with spellType: {spellType}");
-        
+
         // Load spell data from spells_copy.json
         TextAsset spellsJson = Resources.Load<TextAsset>("spells_copy");
         if (spellsJson == null)
@@ -84,7 +83,7 @@ public class RewardScreen : MonoBehaviour
         // Split the spellType to get base and modifiers
         string[] parts = spellType.Split(' ');
         string baseSpell = parts[parts.Length - 1];
-        
+
         Debug.Log($"Parsed base spell: {baseSpell}");
 
         // Find the base spell in the array
@@ -100,6 +99,21 @@ public class RewardScreen : MonoBehaviour
 
         string displayName = baseSpellData["name"].ToString();
         string description = baseSpellData["description"].ToString();
+
+        // --- Get the icon index from the JSON ---
+        int iconIndex = 0;
+        if (baseSpellData.ContainsKey("icon"))
+        {
+            iconIndex = baseSpellData["icon"].ToObject<int>();
+        }
+        else
+        {
+            Debug.LogWarning($"No icon index found for {baseSpell}, defaulting to 0.");
+        }
+        Debug.Log($"Icon index for {baseSpell}: {iconIndex}");
+
+        // --- Set the spell icon using the icon index ---
+        GameManager.Instance.spellIconManager.PlaceSprite(iconIndex, spellIcon.GetComponent<Image>());
 
         // Add modifiers to display if present
         for (int i = 0; i < parts.Length - 1; i++)
