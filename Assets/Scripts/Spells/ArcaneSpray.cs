@@ -18,7 +18,7 @@ public class ArcaneSpray : Spell
         description = "A spray of arcane bolts in a cone.";
         icon = 4;
         cooldown = 5f;
-        manaCost = 30;
+        mana_cost = "30";
         baseDamage = 8;
         projectile.trajectory = "spread";
         projectile.speedEval = 12f;

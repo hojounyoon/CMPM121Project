@@ -16,7 +16,7 @@ public class SpellBuilder
         string JsonString = File.ReadAllText(FileName);
         spellList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Spell>>(JsonString);
         Debug.Log("loading spells");
-        Debug.Log(spellList[0]);
+        //Debug.Log(spellList[0]);
     }
 
     public Spell Build(SpellCaster caster, string spellType)

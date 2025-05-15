@@ -15,15 +15,16 @@ public class Spell
     public SpellCaster owner;
     public Hittable.Team team;
     public string name;
-    protected string description;
-    protected int icon;
-    protected float cooldown;
-    protected int manaCost;
-    protected int baseDamage;
+    public string description;
+    public int icon;
+    public float cooldown;
+    public string mana_cost;
+    public int mana_cost_eval;
+    public int baseDamage;
     //protected string projectileTrajectory;
     //protected float projectileSpeed;
-    protected int projectileSprite;
-    protected int N;
+    public int projectileSprite;
+    public int N;
     protected JObject data;
     public class Projectile
     {
@@ -39,6 +40,7 @@ public class Spell
         public int amountEval = 0;
         public string amount;
         public string type;
+        public int sprite;
     }
     public SpellDamage damage = new();
 
@@ -63,9 +65,9 @@ public class Spell
         //Default values, to be overridden by specific spells
         name = "Default Spell";
         description = "Default description";
-        icon = 0;
+        icon = 2;
         cooldown = 2f;
-        manaCost = 10;
+        mana_cost = "10";
         baseDamage = 25;
         projectile.trajectory = "straight";
         projectile.speedEval = 8f;
@@ -80,10 +82,12 @@ public class Spell
         description = spellInfo.description ?? "No description";
         icon = spellInfo.icon;
         cooldown = spellInfo.cooldown;
-        manaCost = spellInfo.manaCost;
+        mana_cost = spellInfo.mana_cost;
+        mana_cost_eval = RPN(mana_cost);
         baseDamage = RPN(spellInfo.damage.amount);
         projectile.trajectory = spellInfo.projectile.trajectory ?? "straight";
         projectile.speedEval = RPN(spellInfo.projectile.speed);
+        projectile.sprite = spellInfo.projectile.sprite;
         projectileSprite = spellInfo.projectileSprite;
         
         // Get N value from data if it exists
@@ -129,7 +133,7 @@ public class Spell
 
     public virtual int GetManaCost()
     {
-        return manaCost;
+        return mana_cost_eval;
     }
 
     public virtual int GetDamage()
@@ -174,7 +178,7 @@ public class Spell
     protected virtual IEnumerator DoCast(Vector3 where, Vector3 target)
     {
         GameManager.Instance.projectileManager.CreateProjectile(
-            projectileSprite, 
+            projectile.sprite, 
             projectile.trajectory, 
             where, 
             target - where, 
@@ -202,7 +206,7 @@ public class Spell
         int val = 0;
         Stack<string> numStack = new Stack<string>();
         string[] tokens = text.Split(' ');
-        Debug.Log(owner.spellPower);
+        //Debug.Log(owner.spellPower);
         if (tokens.Count() == 1)
         {
             return System.Int32.Parse(tokens[0]); 
@@ -232,7 +236,7 @@ public class Spell
 
                     val1 = System.Int32.Parse(numStack.Pop());
                 }
-                Debug.Log($"val1 is: {val1} val 2 is: {val2}");
+                //Debug.Log($"val1 is: {val1} val 2 is: {val2}");
                 val = val1 + val2;
                 numStack.Push(val.ToString());
                 continue;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class DamageAmplifiedSpell : Spell
 {
@@ -19,7 +20,7 @@ public class DamageAmplifiedSpell : Spell
 
     public override int GetManaCost()
     {
-        return (int)(baseSpell.GetManaCost() * manaMultiplier);
+        return (int)(GetManaCost() * manaMultiplier);
     }
 
     // Delegate other methods to base spell
@@ -133,7 +134,7 @@ public class ChaosSpell : Spell
         yield return baseSpell.Cast(where, target, team);
 
         // Second cast with random angle
-        float randomAngle = Random.Range(-45f, 45f);
+        float randomAngle = UnityEngine.Random.Range(-45f, 45f);
         Vector3 randomDirection = Quaternion.Euler(0, 0, randomAngle) * (target - where);
         Vector3 randomizedTarget = where + randomDirection;
         

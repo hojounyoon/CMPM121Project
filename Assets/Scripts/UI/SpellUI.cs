@@ -23,6 +23,7 @@ public class SpellUI : MonoBehaviour
     public void SetSpell(Spell spell)
     {
         this.spell = spell;
+        Debug.Log($"getting icon{spell.GetIcon()}");
         GameManager.Instance.spellIconManager.PlaceSprite(spell.GetIcon(), icon.GetComponent<Image>());
     }
 

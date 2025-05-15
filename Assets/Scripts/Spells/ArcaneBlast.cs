@@ -18,7 +18,7 @@ public class ArcaneBlast : Spell
         description = "A short-range blast of arcane energy.";
         icon = 3;
         cooldown = 4f;
-        manaCost = 25;
+        mana_cost = "25";
         baseDamage = 15;
         projectile.trajectory = "straight";
         projectile.speedEval = 8f;

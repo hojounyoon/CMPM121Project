@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
         // tell UI elements what to show
         healthui.SetHealth(hp);
         manaui.SetSpellCaster(spellcaster);
+        Debug.Log($"spellcasters spell is: {spellcaster.spell.GetName()} and icon num is {spellcaster.spell.GetIcon()}");
         spellui.SetSpell(spellcaster.spell);
     }
 

@@ -13,7 +13,7 @@ public class ArcaneBolt : Spell
         description = "A straight-flying bolt.";
         icon = 0;
         cooldown = 2f;
-        manaCost = 10;
+        mana_cost = "10";
         baseDamage = 25;
         projectile.trajectory = "straight";
         projectile.speedEval = 8f;

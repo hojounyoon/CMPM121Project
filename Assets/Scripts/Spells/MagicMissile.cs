@@ -18,7 +18,7 @@ public class MagicMissile : Spell
         description = "A homing bolt.";
         icon = 2;
         cooldown = 3f;
-        manaCost = 20;
+        mana_cost = "20";
         baseDamage = 10;
         projectile.trajectory = "homing";
         projectile.speedEval = 10f;
