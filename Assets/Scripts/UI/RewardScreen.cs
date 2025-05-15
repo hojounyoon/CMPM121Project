@@ -135,7 +135,7 @@ public class RewardScreen : MonoBehaviour
         // Set UI
         if (spellNameText != null) spellNameText.text = displayName;
         if (descriptionText != null) descriptionText.text = description;
-        if (spellIcon != null) SetSpellIcon(baseSpell);
+        
 
         Canvas.ForceUpdateCanvases();
     }
