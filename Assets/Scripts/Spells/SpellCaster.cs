@@ -33,7 +33,6 @@ public class SpellCaster
         this.team = team;
         this.spellPower = spellPower;
         spell = new SpellBuilder().Build(this, "arcane_bolt");
-        spell = new SpellBuilder().ApplyModifier(spell, "bounce");
     }
 
     public IEnumerator Cast(Vector3 where, Vector3 target)

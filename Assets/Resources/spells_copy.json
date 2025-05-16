@@ -68,6 +68,13 @@
        "speed_multiplier": "1.75"
    },
    {
+        "name": "heavy",
+        "type": "modifier",
+        "description": "Slow but deadly",
+        "speed_multiplier":"0.5",
+        "damage_multiplier": "1.5"
+   },
+   {
        "name": "doubled",
        "type": "modifier",
        "description": "Spell is cast a second time after a small delay; increased mana cost and cooldown.",

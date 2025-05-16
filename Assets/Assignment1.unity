@@ -825,12 +825,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainGameObject: {fileID: 96316927}
   icon: {fileID: 334187433}
   cooldown: {fileID: 1468482023}
   manacost: {fileID: 11042825}
   damage: {fileID: 757752468}
   highlight: {fileID: 279594428}
   dropbutton: {fileID: 426128245}
+  spellUIContainer: {fileID: 0}
 --- !u!114 &96316930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2173,12 +2175,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainGameObject: {fileID: 457295002}
   icon: {fileID: 1298929768}
   cooldown: {fileID: 1528674329}
   manacost: {fileID: 532755681}
   damage: {fileID: 1860547075}
   highlight: {fileID: 1477215737}
   dropbutton: {fileID: 1528944909}
+  spellUIContainer: {fileID: 0}
 --- !u!114 &457295005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3678,12 +3682,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainGameObject: {fileID: 797691353}
   icon: {fileID: 1218915916}
   cooldown: {fileID: 1610884461}
   manacost: {fileID: 2070572078}
   damage: {fileID: 989605413}
   highlight: {fileID: 12506828}
   dropbutton: {fileID: 578112679}
+  spellUIContainer: {fileID: 0}
 --- !u!114 &797691356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6739,6 +6745,9 @@ MonoBehaviour:
   healthui: {fileID: 765025204}
   manaui: {fileID: 71109453}
   spellui: {fileID: 2085212185}
+  spellui2: {fileID: 96316929}
+  spellui3: {fileID: 457295004}
+  spellui4: {fileID: 797691355}
   speed: 5
   unit: {fileID: 0}
   spellContainer: {fileID: 0}
@@ -58194,12 +58203,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainGameObject: {fileID: 2085212183}
   icon: {fileID: 1727109217}
   cooldown: {fileID: 1669142557}
   manacost: {fileID: 400786126}
   damage: {fileID: 982783696}
   highlight: {fileID: 1270515289}
   dropbutton: {fileID: 672798488}
+  spellUIContainer: {fileID: 0}
 --- !u!114 &2085212186
 MonoBehaviour:
   m_ObjectHideFlags: 0
