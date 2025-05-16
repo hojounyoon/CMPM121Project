@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -123,5 +124,157 @@ public class PlayerController : MonoBehaviour
         GameObject spellUIObject = Instantiate(spellui.gameObject, spellContainer);
         SpellUI newSpellUI = spellUIObject.GetComponent<SpellUI>();
         newSpellUI.SetSpell(spell);
+    }
+
+    public int RPN(string input)
+    {
+        int val = 0;
+        Stack<string> numStack = new Stack<string>();
+        string[] tokens = input.Split(' ');
+        if (tokens.Count() == 1)
+        {
+            return System.Int32.Parse(tokens[0]); 
+        }
+
+        for (int i = 0; i < tokens.Count(); i++) 
+        {
+            if (tokens[i] == "+" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "wave")
+                {
+                    val2 = GameManager.Instance.currentWave;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "wave")
+                {
+                    val1 = GameManager.Instance.currentWave;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 + val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "-" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "wave")
+                {
+                    val2 = GameManager.Instance.currentWave;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "wave")
+                {
+                    val1 = GameManager.Instance.currentWave;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 - val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "*" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "wave")
+                {
+                    val2 = GameManager.Instance.currentWave;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "wave")
+                {
+                    val1 = GameManager.Instance.currentWave;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 * val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "/" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "wave")
+                {
+                    val2 = GameManager.Instance.currentWave;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "wave")
+                {
+                    val1 = GameManager.Instance.currentWave + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 / val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            if (tokens[i] == "%" ) {
+                int val1 = 0;
+                int val2 = 0;
+                if(numStack.Peek() == "wave")
+                {
+                    val2 = GameManager.Instance.currentWave + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val2 = System.Int32.Parse(numStack.Pop());
+                }
+                if(numStack.Peek() == "wave")
+                {
+                    val1 = GameManager.Instance.currentWave + 1;
+                    numStack.Pop();
+                }
+                else
+                {
+
+                    val1 = System.Int32.Parse(numStack.Pop());
+                }
+                val = val1 % val2;
+                numStack.Push(val.ToString());
+                continue;
+            }
+            numStack.Push(tokens[i]);
+        }
+        return val;
     }
 }

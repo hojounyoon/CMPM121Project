@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class GameManager 
 {
@@ -37,7 +38,7 @@ public class GameManager
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }
 
-    public int currentWave = 0;
+    public int currentWave = 1;
 
     public RewardScreen rewardScreen;
 
@@ -80,8 +81,26 @@ public class GameManager
     public void StartNextWave()
     {
         currentWave++;
-        state = GameState.INWAVE;
+        // state = GameState.INWAVE;
         // Any other wave start logic you have
+
+        if(state == GameState.COUNTDOWN)
+        {
+            return;
+        }
+        // update player stats
+        Debug.Log("updating player stats");
+        PlayerController player = GameManager.Instance.player.GetComponent<PlayerController>();
+        player.hp.SetMaxHP(player.RPN("95 wave 5 * +"));
+        Debug.Log($"current wave: {currentWave}: {currentWave * 10}");
+        player.spellcaster.max_mana = player.RPN("90 wave 10 * +");
+        player.spellcaster.mana_reg = player.RPN("10 wave +");
+        Debug.Log($"spellpower: {player.RPN("wave 10 *")}");
+        player.spellcaster.spellPower = player.RPN("wave 10 *");
+
+
+        
+
     }
 
     public void OnWaveComplete()

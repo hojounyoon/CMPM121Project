@@ -25,7 +25,7 @@ public class SpellCaster
         }
     }
 
-    public SpellCaster(int mana, int mana_reg, Hittable.Team team, int spellPower = 0)
+    public SpellCaster(int mana, int mana_reg, Hittable.Team team, int spellPower = 10)
     {
         this.mana = mana;
         this.max_mana = mana;

@@ -75,7 +75,7 @@ public class Spell
         N = 0;
 
         // Add debug logging for N value
-        Debug.Log($"Initializing spell {spellInfo.name} with N value: {spellInfo.N}");
+        // Debug.Log($"Initializing spell {spellInfo.name} with N value: {spellInfo.N}");
         
         // override the info(could be done better)
         name = spellInfo.name ?? "No Name";
@@ -84,6 +84,7 @@ public class Spell
         cooldown = spellInfo.cooldown;
         mana_cost = spellInfo.mana_cost;
         mana_cost_eval = RPN(mana_cost);
+        damage.amount = spellInfo.damage.amount;
         baseDamage = RPN(spellInfo.damage.amount);
         projectile.trajectory = spellInfo.projectile.trajectory ?? "straight";
         projectile.speedEval = RPN(spellInfo.projectile.speed);
@@ -97,12 +98,12 @@ public class Spell
             if (nValue.Type == JTokenType.String)
             {
                 N = RPN(nValue.ToString());
-                Debug.Log($"Evaluated N value from RPN: {nValue} = {N}");
+                //Debug.Log($"Evaluated N value from RPN: {nValue} = {N}");
             }
             else
             {
                 N = nValue.Value<int>();
-                Debug.Log($"Using direct N value: {N}");
+                //Debug.Log($"Using direct N value: {N}");
             }
         }
         else
@@ -114,8 +115,8 @@ public class Spell
         data = new JObject();
         data["N"] = N;
 
-        Debug.Log($"Final N value after initialization: {N}");
-        Debug.Log($"Data object N value: {data["N"]}");
+        //Debug.Log($"Final N value after initialization: {N}");
+        //Debug.Log($"Data object N value: {data["N"]}");
     }
 
     protected virtual void InitializeSpell()
@@ -138,7 +139,7 @@ public class Spell
 
     public virtual int GetDamage()
     {
-        return (int)(baseDamage * (1 + owner.spellPower / 100f));
+        return (int)RPN(damage.amount);
     }
 
     public virtual float GetCooldown()
@@ -156,7 +157,7 @@ public class Spell
         if (data != null && data.ContainsKey("N"))
         {
             int n = data["N"].Value<int>();
-            Debug.Log($"GetN() called for {GetName()}, returning {n}");
+            // Debug.Log($"GetN() called for {GetName()}, returning {n}");
             return n;
         }
         Debug.LogWarning($"GetN() called for {GetName()}, but N value not found in spell data");

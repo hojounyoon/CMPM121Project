@@ -122,6 +122,10 @@ public class EnemySpawner : MonoBehaviour
     public void NextWave()
     {
         currentWave++;
+        if(GameManager.Instance.state == GameManager.GameState.COUNTDOWN)
+        {
+            return;
+        }
         if (currentWave >= totalWaves)
         {
             Debug.Log("GAME OVER");
@@ -130,7 +134,9 @@ public class EnemySpawner : MonoBehaviour
         }
         else
         {
+            GameManager.Instance.StartNextWave();
             StartCoroutine(SpawnWave());
+
         }
     }
 

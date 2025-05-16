@@ -117,7 +117,7 @@ public class RewardScreenManager : MonoBehaviour
         {
             spellRewardScreen.gameObject.SetActive(false);
         }
-        
+        Debug.Log("starting next wave :)");
         // Start next wave
         GameManager.Instance.StartNextWave();
     }

@@ -25,7 +25,7 @@ public class SpellUI : MonoBehaviour
     public void SetSpell(Spell spell)
     {
         this.spell = spell;
-        Debug.Log($"getting icon{spell.GetIcon()}");
+        //Debug.Log($"getting icon{spell.GetIcon()}");
         GameManager.Instance.spellIconManager.PlaceSprite(spell.GetIcon(), icon.GetComponent<Image>());
         mainGameObject.SetActive(true);
     }
@@ -39,6 +39,7 @@ public class SpellUI : MonoBehaviour
             manacost.text = spell.GetManaCost().ToString();
             damage.text = spell.GetDamage().ToString();
             last_text_update = Time.time;
+            Debug.Log($"updating spell damage is: {spell.GetDamage()}");
         }
         
         float since_last = Time.time - spell.last_cast;
