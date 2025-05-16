@@ -37,22 +37,22 @@ public class SpellCaster
 
     public IEnumerator Cast(Vector3 where, Vector3 target)
     {        
-        if (mana >= spell.GetManaCost() && spell.IsReady())
+        if (spell != null && mana >= spell.GetManaCost() && spell.IsReady())
         {
             mana -= spell.GetManaCost();
             yield return spell.Cast(where, target, team);
         }
-        if (mana >= spell2.GetManaCost() && spell2.IsReady())
+        if (spell2 != null && mana >= spell2.GetManaCost() && spell2.IsReady())
         {
             mana -= spell2.GetManaCost();
             yield return spell2.Cast(where, target, team);
         }
-        if (mana >= spell3.GetManaCost() && spell3.IsReady())
+        if (spell3 != null && mana >= spell3.GetManaCost() && spell3.IsReady())
         {
             mana -= spell3.GetManaCost();
             yield return spell3.Cast(where, target, team);
         }
-        if (mana >= spell4.GetManaCost() && spell4.IsReady())
+        if (spell4 != null && mana >= spell4.GetManaCost() && spell4.IsReady())
         {
             mana -= spell4.GetManaCost();
             yield return spell4.Cast(where, target, team);
