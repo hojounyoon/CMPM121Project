@@ -48,4 +48,9 @@ public class Hittable
         this.max_hp = max_hp;
         this.hp = Mathf.RoundToInt(perc * max_hp);
     }
+    public void ReduceSpeed(int amount)
+    {
+        EnemyController enemy = owner.GetComponent<EnemyController>();
+        enemy.speed -= amount;
+    }
 }

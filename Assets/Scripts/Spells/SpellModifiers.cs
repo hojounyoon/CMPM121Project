@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Unity.VisualScripting;
 
 public class DamageAmplifiedSpell : Spell
 {
@@ -47,6 +48,30 @@ public class SpeedAmplifiedSpell : Spell
 
     public override string GetName() => "Speed-Amplified " + baseSpell.GetName();
     public override int GetDamage() => baseSpell.GetDamage();
+    public override int GetManaCost() => baseSpell.GetManaCost();
+    public override float GetCooldown() => baseSpell.GetCooldown();
+    public override int GetIcon() => baseSpell.GetIcon();
+    protected override IEnumerator DoCast(Vector3 where, Vector3 target) => baseSpell.Cast(where, target, team);
+}
+
+public class HeavySpell : Spell
+{
+    private Spell baseSpell;
+    private float speedMultiplier = 0.5f;
+    private float damageMultiplier = 1.5f;
+
+    public HeavySpell(Spell spell) : base(spell.owner)
+    {
+        this.baseSpell = spell;
+    }
+
+    public override float GetProjectileSpeed()
+    {
+        return baseSpell.GetProjectileSpeed() * speedMultiplier;
+    }
+
+    public override string GetName() => "Heavy " + baseSpell.GetName();
+    public override int GetDamage() => (int)(baseSpell.GetDamage() * damageMultiplier);
     public override int GetManaCost() => baseSpell.GetManaCost();
     public override float GetCooldown() => baseSpell.GetCooldown();
     public override int GetIcon() => baseSpell.GetIcon();
@@ -118,6 +143,60 @@ public class SplitterSpell : Spell
     public override int GetManaCost() => (int)(baseSpell.GetManaCost() * manaMultiplier);
 }
 
+public class BounceSpell : Spell
+{
+    private Spell baseSpell;
+    private float damageMultiplier = 1.5f;
+
+    public BounceSpell(Spell spell) : base(spell.owner)
+    {
+        this.baseSpell = spell;
+    }
+
+    protected override IEnumerator DoCast(Vector3 where, Vector3 target)
+    {
+        //yield return baseSpell.Cast(where, target, team);
+        GameManager.Instance.projectileManager.CreateProjectile(
+            baseSpell.projectileSprite, 
+            baseSpell.projectile.trajectory, 
+            where, 
+            target - where, 
+            baseSpell.projectile.speedEval, 
+            (Hittable other, Vector3 impact) => {
+                // Do the normal hit damage
+                if (other.team != team)
+                {
+                    other.Damage(new Damage(GetDamage(), Damage.Type.ARCANE));
+                    DoCast(Vector3.Lerp(other.owner.transform.position, GameManager.Instance.player.transform.position, 0.2f), GameManager.Instance.player.transform.position);
+                    GameManager.Instance.projectileManager.CreateProjectile(
+                        baseSpell.projectileSprite, 
+                        baseSpell.projectile.trajectory, 
+                        Vector3.Lerp(other.owner.transform.position, GameManager.Instance.player.transform.position, 0.2f), 
+                        Vector3.Lerp(other.owner.transform.position, GameManager.Instance.player.transform.position, 0.2f) - target, 
+                        baseSpell.projectile.speedEval, 
+                        (Hittable other, Vector3 impact) => {
+                            // Do the normal hit damage
+                            if (other.team != team)
+                            {
+                                other.Damage(new Damage(GetDamage(), Damage.Type.ARCANE));
+                            }
+                        }
+                    );
+                }
+            }
+        );
+        yield return new WaitForEndOfFrame();
+        Debug.Log($"speed: {baseSpell.projectile.speedEval}");
+        
+    }
+
+    public override string GetName() => "Bounce " + baseSpell.GetName();
+    public override int GetManaCost() => baseSpell.GetManaCost();
+    public override float GetCooldown() => baseSpell.GetCooldown();
+    public override int GetIcon() => baseSpell.GetIcon();
+    public override int GetDamage() => baseSpell.GetDamage();
+}
+
 public class ChaosSpell : Spell
 {
     private Spell baseSpell;
@@ -145,7 +224,7 @@ public class ChaosSpell : Spell
     public override int GetManaCost() => baseSpell.GetManaCost();
     public override float GetCooldown() => baseSpell.GetCooldown();
     public override int GetIcon() => baseSpell.GetIcon();
-    public override int GetDamage() => baseSpell.GetDamage();
+    public override int GetDamage() => (int)(baseSpell.GetDamage() * damageMultiplier);
 }
 
 public class HomingSpell : Spell

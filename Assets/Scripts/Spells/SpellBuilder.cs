@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class SpellBuilder 
 {
@@ -15,14 +16,14 @@ public class SpellBuilder
         string FileName = "Assets/Resources/spells_copy.json";
         string JsonString = File.ReadAllText(FileName);
         spellList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Spell>>(JsonString);
-        Debug.Log("loading spells");
+        //Debug.Log("loading spells");
         //Debug.Log(spellList[0]);
     }
 
     public Spell Build(SpellCaster caster, string spellType)
     {
         LoadSpells();
-        Debug.Log("loaded speels");
+        //Debug.Log("loaded speels");
 
         Debug.Log($"SpellBuilder.Build called with spellType: {spellType}");
 
@@ -76,13 +77,15 @@ public class SpellBuilder
                 return new ArcaneBlastSpell(caster, spellData);
             case "arcane_spray":
                 return new ArcaneSpraySpell(caster, spellData);
+            case "arcane_slow":
+                return new ArcaneSlowSpell(caster, spellData);
             default:
                 Debug.LogError($"Unknown base spell type: {baseSpell}, defaulting to arcane_bolt");
                 return new Spell(caster, spellList[0]);
         }
     }
 
-    private Spell ApplyModifier(Spell baseSpell, string modifier)
+    public Spell ApplyModifier(Spell baseSpell, string modifier)
     {
         Debug.Log($"Applying modifier {modifier} to {baseSpell.GetName()}");
         switch (modifier)
@@ -99,6 +102,8 @@ public class SpellBuilder
                 return new ChaosSpell(baseSpell);
             case "homing":
                 return new HomingSpell(baseSpell);
+            case "bounce":
+                return new BounceSpell(baseSpell);
             default:
                 Debug.LogError($"Unknown modifier: {modifier}");
                 return baseSpell;
@@ -113,8 +118,8 @@ public class SpellBuilder
             return "arcane_bolt";
         }
 
-        // Get all base spells (first 4 spells in the list)
-        var baseSpells = spellList.Take(4).ToList();
+        // Get all base spells (first 5 spells in the list)
+        var baseSpells = spellList.Take(5).ToList();
         if (baseSpells.Count == 0)
         {
             Debug.LogError("No base spells found in spellList!");
@@ -125,7 +130,7 @@ public class SpellBuilder
         string baseSpell = baseSpells[Random.Range(0, baseSpells.Count)].name;
         
         // Get all modifiers (remaining spells in the list)
-        var modifiers = spellList.Skip(4).ToList();
+        var modifiers = spellList.Skip(5).ToList();
         if (modifiers.Count > 0 && Random.value > 0.5f) // 50% chance to add a modifier
         {
             string modifier = modifiers[Random.Range(0, modifiers.Count)].name;

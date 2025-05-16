@@ -39,7 +39,7 @@ public class SpellUI : MonoBehaviour
             manacost.text = spell.GetManaCost().ToString();
             damage.text = spell.GetDamage().ToString();
             last_text_update = Time.time;
-            Debug.Log($"updating spell damage is: {spell.GetDamage()}");
+            //Debug.Log($"updating spell damage is: {spell.GetDamage()}");
         }
         
         float since_last = Time.time - spell.last_cast;
