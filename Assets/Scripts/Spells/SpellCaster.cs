@@ -11,6 +11,9 @@ public class SpellCaster
     public int spellPower;
     public Hittable.Team team;
     public Spell spell;
+    public Spell spell2;
+    public Spell spell3;
+    public Spell spell4;
 
     public IEnumerator ManaRegeneration()
     {
@@ -38,6 +41,21 @@ public class SpellCaster
         {
             mana -= spell.GetManaCost();
             yield return spell.Cast(where, target, team);
+        }
+        if (mana >= spell2.GetManaCost() && spell2.IsReady())
+        {
+            mana -= spell2.GetManaCost();
+            yield return spell2.Cast(where, target, team);
+        }
+        if (mana >= spell3.GetManaCost() && spell3.IsReady())
+        {
+            mana -= spell3.GetManaCost();
+            yield return spell3.Cast(where, target, team);
+        }
+        if (mana >= spell4.GetManaCost() && spell4.IsReady())
+        {
+            mana -= spell4.GetManaCost();
+            yield return spell4.Cast(where, target, team);
         }
         yield break;
     }

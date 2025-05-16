@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
 
     public SpellCaster spellcaster;
     public SpellUI spellui;
+    public SpellUI spellui2;
+    public SpellUI spellui3;
+    public SpellUI spellui4;
 
     public int speed;
 

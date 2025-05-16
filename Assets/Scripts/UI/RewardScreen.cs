@@ -234,17 +234,40 @@ public class RewardScreen : MonoBehaviour
         string oldSpellName = player.spellcaster.spell.GetName();
         
         // Assign the new spell to the player's spellcaster
-        player.spellcaster.spell = newSpell;
-        
-        // Update the spell UI
-        if (player.spellui != null)
+        if(player.spellcaster.spell == null && player.spellui != null)
         {
+            Debug.Log("spell added to position 1");
+            player.spellcaster.spell = newSpell;
             player.spellui.SetSpell(newSpell);
+        }
+        else if(player.spellcaster.spell2 == null && player.spellui != null)
+        {
+            Debug.Log("spell added to position 2");   
+            player.spellcaster.spell2 = newSpell;
+            player.spellui2.SetSpell(newSpell);
+        }
+        else if(player.spellcaster.spell3 == null && player.spellui != null)
+        {
+            Debug.Log("spell added to position 3");
+            player.spellcaster.spell3 = newSpell;
+            player.spellui3.SetSpell(newSpell);
+        }
+        else if(player.spellcaster.spell4 == null && player.spellui != null)
+        {
+            Debug.Log("spell added to position 4");
+            player.spellcaster.spell4 = newSpell;
+            player.spellui4.SetSpell(newSpell);
         }
         else
         {
-            Debug.LogError("RewardScreen: Player's spellui is null!");
+            Debug.Log("tried to equip another spell but already at max spells");
         }
+
+        
+        // else
+        // {
+        //     Debug.LogError("RewardScreen: Player's spellui is null!");
+        // }
 
         // Verify the spell was actually changed
         Debug.Log($"Final spell after assignment: Type = {player.spellcaster.spell.GetType().Name}, Name = {player.spellcaster.spell.GetName()}");

@@ -4,6 +4,7 @@ using TMPro;
 
 public class SpellUI : MonoBehaviour
 {
+    public GameObject mainGameObject;
     public GameObject icon;
     public RectTransform cooldown;
     public TextMeshProUGUI manacost;
@@ -13,6 +14,7 @@ public class SpellUI : MonoBehaviour
     float last_text_update;
     const float UPDATE_DELAY = 1;
     public GameObject dropbutton;
+    public SpellUIContainer spellUIContainer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,6 +27,7 @@ public class SpellUI : MonoBehaviour
         this.spell = spell;
         Debug.Log($"getting icon{spell.GetIcon()}");
         GameManager.Instance.spellIconManager.PlaceSprite(spell.GetIcon(), icon.GetComponent<Image>());
+        mainGameObject.SetActive(true);
     }
 
     // Update is called once per frame
