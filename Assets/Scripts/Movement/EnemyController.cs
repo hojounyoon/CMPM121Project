@@ -41,7 +41,6 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-
     public void Die()
     {
         if (!dead)
@@ -51,6 +50,12 @@ public class EnemyController : MonoBehaviour
             if (StatManager.Instance != null)
             {
                 StatManager.Instance.OnEnemyDefeated();
+            }
+            
+            // Notify RelicManager of the kill
+            if (RelicManager.Instance != null)
+            {
+                RelicManager.Instance.OnEnemyKilled();
             }
             
             // Remove from GameManager first

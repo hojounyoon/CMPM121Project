@@ -12,7 +12,8 @@ public class GameManager
         INWAVE,
         WAVEEND,
         COUNTDOWN,
-        GAMEOVER
+        GAMEOVER,
+        RELICREWARD
     }
     public GameState state;
 
@@ -98,15 +99,41 @@ public class GameManager
         Debug.Log($"spellpower: {player.RPN("wave 10 *")}");
         player.spellcaster.spellPower = player.RPN("wave 10 *");
 
-
-        
-
+        // Notify RelicManager of wave start
+        if (RelicManager.Instance != null)
+        {
+            RelicManager.Instance.OnWaveStart(currentWave);
+        }
     }
 
     public void OnWaveComplete()
     {
         state = GameState.WAVEEND;
-        rewardScreen.Show();
+        
+        // Check if it's time for relic rewards (every third wave starting from wave 3)
+        if (currentWave >= 3 && currentWave % 3 == 0)
+        {
+            state = GameState.RELICREWARD;
+            if (rewardScreen != null)
+            {
+                rewardScreen.Show();
+            }
+            else
+            {
+                Debug.LogError("RewardScreen not assigned!");
+                ContinueGame();
+            }
+        }
+        else
+        {
+            rewardScreen.Show();
+        }
+    }
+
+    public void ContinueGame()
+    {
+        state = GameState.COUNTDOWN;
+        countdown = 3;
     }
 
     private GameManager()

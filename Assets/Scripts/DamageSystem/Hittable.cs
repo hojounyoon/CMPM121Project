@@ -30,6 +30,14 @@ public class Hittable
                 OnDeath?.Invoke();
             }
         }
+        else
+        {
+            // Check if this is the player and notify RelicManager
+            if (team == Team.PLAYER && RelicManager.Instance != null)
+            {
+                RelicManager.Instance.OnPlayerTakeDamage();
+            }
+        }
     }
 
     public event Action OnDeath;

@@ -24,11 +24,15 @@ public class PlayerController : MonoBehaviour
 
     public Transform spellContainer; // Reference to the UI container for spells
 
+    private Vector3 lastPosition;
+    private bool isMoving;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         unit = GetComponent<Unit>();
         GameManager.Instance.player = gameObject;
+        lastPosition = transform.position;
     }
 
     public void StartLevel()
@@ -60,18 +64,22 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            CheckMovement();
         }
         if (Input.GetKey(KeyCode.S))
         {
             transform.Translate(Vector3.back * speed * Time.deltaTime);
+            CheckMovement();
         }
         if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(Vector3.left * speed * Time.deltaTime);
+            CheckMovement();
         }
         if (Input.GetKey(KeyCode.D))
         {
             transform.Translate(Vector3.right * speed * Time.deltaTime);
+            CheckMovement();
         }
 
         // Handle shooting
@@ -82,12 +90,36 @@ public class PlayerController : MonoBehaviour
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(mouseScreen);
             mouseWorld.z = 0;
             StartCoroutine(spellcaster.Cast(transform.position, mouseWorld));
+            if (RelicManager.Instance != null)
+            {
+                RelicManager.Instance.OnPlayerCastSpell();
+            }
         }
 
         // Update the player's position in the GameManager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.player = gameObject;
+        }
+    }
+
+    private void CheckMovement()
+    {
+        if (transform.position != lastPosition)
+        {
+            if (!isMoving)
+            {
+                isMoving = true;
+                if (RelicManager.Instance != null)
+                {
+                    RelicManager.Instance.OnPlayerMove();
+                }
+            }
+            lastPosition = transform.position;
+        }
+        else
+        {
+            isMoving = false;
         }
     }
 
@@ -98,18 +130,21 @@ public class PlayerController : MonoBehaviour
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(mouseScreen);
         mouseWorld.z = 0;
         StartCoroutine(spellcaster.Cast(transform.position, mouseWorld));
+        if (RelicManager.Instance != null)
+        {
+            RelicManager.Instance.OnPlayerCastSpell();
+        }
     }
 
     void OnMove(InputValue value)
     {
-        //Debug.Log($"OnMove called - GameState: {GameManager.Instance.state}, Input: {value.Get<Vector2>()}");
         if (GameManager.Instance.state == GameManager.GameState.PREGAME || GameManager.Instance.state == GameManager.GameState.GAMEOVER) 
         {
             Debug.Log("Movement blocked due to game state");
             return;
         }
         unit.movement = value.Get<Vector2>()*speed;
-        //Debug.Log($"Movement set to: {unit.movement}");
+        CheckMovement();
     }
 
     void Die()
@@ -148,7 +183,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val2 = System.Int32.Parse(numStack.Pop());
                 }
                 if(numStack.Peek() == "wave")
@@ -158,7 +192,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val1 = System.Int32.Parse(numStack.Pop());
                 }
                 val = val1 + val2;
@@ -175,7 +208,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val2 = System.Int32.Parse(numStack.Pop());
                 }
                 if(numStack.Peek() == "wave")
@@ -185,7 +217,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val1 = System.Int32.Parse(numStack.Pop());
                 }
                 val = val1 - val2;
@@ -202,7 +233,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val2 = System.Int32.Parse(numStack.Pop());
                 }
                 if(numStack.Peek() == "wave")
@@ -212,7 +242,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val1 = System.Int32.Parse(numStack.Pop());
                 }
                 val = val1 * val2;
@@ -229,7 +258,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val2 = System.Int32.Parse(numStack.Pop());
                 }
                 if(numStack.Peek() == "wave")
@@ -239,7 +267,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val1 = System.Int32.Parse(numStack.Pop());
                 }
                 val = val1 / val2;
@@ -256,7 +283,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val2 = System.Int32.Parse(numStack.Pop());
                 }
                 if(numStack.Peek() == "wave")
@@ -266,7 +292,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-
                     val1 = System.Int32.Parse(numStack.Pop());
                 }
                 val = val1 % val2;

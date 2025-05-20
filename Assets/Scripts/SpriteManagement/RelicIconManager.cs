@@ -6,4 +6,9 @@ public class RelicIconManager : IconManager
     {
         GameManager.Instance.relicIconManager = this;
     }
+
+    public Sprite GetSprite(int index)
+    {
+        return Get(index);
+    }
 }
