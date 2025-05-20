@@ -29,6 +29,7 @@ public class MenuSelectorController : MonoBehaviour
     public void StartLevel()
     {
         spawner.StartLevel(level);
+        GameManager.Instance.UpdatePlayerStats();
     }
 
     public void SetClass(string text)
@@ -42,7 +43,5 @@ public class MenuSelectorController : MonoBehaviour
         GameManager.Instance.SetClass(className);
         spawner.class_selector.gameObject.SetActive(false);
         spawner.CreateLevelButtons();
-        Debug.Log($"{spawner.playerClasses[className].health} selected");
-        GameManager.Instance.UpdatePlayerStats();
     }
 }
