@@ -11,7 +11,9 @@ using Unity.VisualScripting;
 public class EnemySpawner : MonoBehaviour
 {
     public Image level_selector;
+    public Image class_selector;
     public GameObject button;
+    public GameObject classButton;
     public GameObject enemy;
     public SpawnPoint[] SpawnPoints;    
     private List<JObject> levels;
@@ -23,22 +25,39 @@ public class EnemySpawner : MonoBehaviour
     private int currentLevel = 0;
 
     public List<Enemy> enemyList;
+    public Dictionary<string, PlayerClass> playerClasses;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         LoadLevels();
-        loadEnemies();
+        LoadEnemies();
+        LoadClasses();
+        CreateClassesButtons();
         CreateLevelButtons();
+
+        GameManager.Instance.enemySpawner = this;
     }
 
-    public void loadEnemies() 
+    public void LoadEnemies() 
     {
         string FileName = "Assets/Resources/enemies.json";
         string JsonString = File.ReadAllText(FileName);
         enemyList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Enemy>>(JsonString);
 
 
+    }
+
+    public void LoadClasses()
+    {
+        string FileName = "Assets/Resources/classes.json";
+        string JsonString = File.ReadAllText(FileName);
+        playerClasses = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, PlayerClass>>(JsonString);
+
+        foreach (var item in playerClasses)
+        {
+            Debug.Log($"class name: {item.Key}");
+        }
     }
 
     public class Enemy
@@ -66,7 +85,27 @@ public class EnemySpawner : MonoBehaviour
         CreateLevelButtons();
     }
 
-    void CreateLevelButtons()
+    void CreateClassesButtons()
+    {
+        float buttonSpacing = 100f;
+        float startY = 130f;
+        int i = 0;
+
+        foreach (var cl in playerClasses)
+        {
+            GameObject selector = Instantiate(classButton, class_selector.transform);
+            float yPosition = startY - (i * buttonSpacing);
+            selector.transform.localPosition = new Vector3(0, yPosition);
+
+            string className = cl.Key;
+            selector.GetComponent<MenuSelectorController>().spawner = this;
+            selector.GetComponent<MenuSelectorController>().SetClass(className);
+
+            i++;
+        }
+    }
+
+    public void CreateLevelButtons()
     {
         float buttonSpacing = 100f;
         float startY = 130f;

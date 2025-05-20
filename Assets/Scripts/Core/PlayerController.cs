@@ -163,6 +163,7 @@ public class PlayerController : MonoBehaviour
 
     public int RPN(string input)
     {
+        // CONVERTS WITH ONLY "wave"
         int val = 0;
         Stack<string> numStack = new Stack<string>();
         string[] tokens = input.Split(' ');
