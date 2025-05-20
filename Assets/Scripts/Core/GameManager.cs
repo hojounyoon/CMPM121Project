@@ -27,9 +27,9 @@ public class GameManager
             return theInstance;
         }
     }
-
+    public string className;
     public GameObject player;
-    
+    public EnemySpawner enemySpawner;
     public ProjectileManager projectileManager;
     public SpellIconManager spellIconManager;
     public EnemySpriteManager enemySpriteManager;
@@ -42,6 +42,11 @@ public class GameManager
     public int currentWave = 1;
 
     public RewardScreen rewardScreen;
+
+    public void SetClass(string name)
+    {
+        className = name;
+    }
 
     public void AddEnemy(GameObject enemy)
     {
@@ -91,13 +96,10 @@ public class GameManager
         }
         // update player stats
         Debug.Log("updating player stats");
-        PlayerController player = GameManager.Instance.player.GetComponent<PlayerController>();
-        player.hp.SetMaxHP(player.RPN("95 wave 5 * +"));
-        Debug.Log($"current wave: {currentWave}: {currentWave * 10}");
-        player.spellcaster.max_mana = player.RPN("90 wave 10 * +");
-        player.spellcaster.mana_reg = player.RPN("10 wave +");
-        Debug.Log($"spellpower: {player.RPN("wave 10 *")}");
-        player.spellcaster.spellPower = player.RPN("wave 10 *");
+        
+
+        UpdatePlayerStats();
+        
 
         // Notify RelicManager of wave start
         if (RelicManager.Instance != null)
@@ -134,6 +136,18 @@ public class GameManager
     {
         state = GameState.COUNTDOWN;
         countdown = 3;
+    }
+
+    public void UpdatePlayerStats()
+    {
+        PlayerController player = GameManager.Instance.player.GetComponent<PlayerController>();
+        player.hp.SetMaxHP(player.RPN(enemySpawner.playerClasses[className].health));
+        Debug.Log($"current wave: {currentWave}: {currentWave * 10}");
+        player.spellcaster.max_mana = player.RPN(enemySpawner.playerClasses[className].mana);
+        player.spellcaster.mana_reg = player.RPN(enemySpawner.playerClasses[className].mana_regeneration);
+        Debug.Log($"spellpower: {player.RPN(enemySpawner.playerClasses[className].spellpower)}");
+        player.spellcaster.spellPower = player.RPN(enemySpawner.playerClasses[className].spellpower);
+
     }
 
     private GameManager()
