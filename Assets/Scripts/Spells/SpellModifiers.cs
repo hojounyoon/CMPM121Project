@@ -251,7 +251,7 @@ public class HomingSpell : Spell
     protected override IEnumerator DoCast(Vector3 where, Vector3 target)
     {
         GameManager.Instance.projectileManager.CreateProjectile(
-            baseSpell.GetIcon(),
+            baseSpell.projectileSprite,
             "homing",
             where,
             target - where,

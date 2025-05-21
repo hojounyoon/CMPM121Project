@@ -16,19 +16,19 @@ public class RelicManager
         }
     }
 
-    private List<Relic> activeRelics = new List<Relic>();
+    private List<Relic> availableRelics = new List<Relic>();
     private PlayerController player;
 
     private RelicManager()
     {
-        LoadRelics();
+        LoadAvailableRelics();
         if (GameManager.Instance.player != null)
         {
             player = GameManager.Instance.player.GetComponent<PlayerController>();
         }
     }
 
-    private void LoadRelics()
+    private void LoadAvailableRelics()
     {
         TextAsset relicsJson = Resources.Load<TextAsset>("relics");
         if (relicsJson == null)
@@ -52,7 +52,7 @@ public class RelicManager
             if (trigger != null && effect != null)
             {
                 Relic relic = new Relic(name, spriteIndex, trigger, effect);
-                activeRelics.Add(relic);
+                availableRelics.Add(relic);
             }
         }
     }
@@ -109,32 +109,27 @@ public class RelicManager
 
     public void AddRelic(Relic relic)
     {
-        if (!HasRelic(relic.name))
-        {
-            activeRelics.Add(relic);
-            Debug.Log($"Added new relic: {relic.name}");
-        }
-        else
-        {
-            Debug.LogWarning($"Attempted to add duplicate relic: {relic.name}");
-        }
+        // Remove the relic from available relics when it's selected
+        availableRelics.RemoveAll(r => r.name == relic.name);
+        Debug.Log($"Added relic: {relic.name}");
     }
 
     public bool HasRelic(string relicName)
     {
-        return activeRelics.Exists(r => r.name == relicName);
+        // Check if the relic is still in available relics
+        return !availableRelics.Exists(r => r.name == relicName);
     }
 
-    public List<Relic> GetActiveRelics()
+    public List<Relic> GetAvailableRelics()
     {
-        return new List<Relic>(activeRelics);
+        return new List<Relic>(availableRelics);
     }
 
     public void OnPlayerTakeDamage()
     {
         if (player == null) return;
         
-        foreach (var relic in activeRelics)
+        foreach (var relic in availableRelics)
         {
             if (relic.trigger is TakeDamageTrigger)
             {
@@ -147,7 +142,7 @@ public class RelicManager
     {
         if (player == null) return;
         
-        foreach (var relic in activeRelics)
+        foreach (var relic in availableRelics)
         {
             if (relic.trigger is OnKillTrigger)
             {
@@ -160,7 +155,7 @@ public class RelicManager
     {
         if (player == null) return;
         
-        foreach (var relic in activeRelics)
+        foreach (var relic in availableRelics)
         {
             if (relic.effect is GainSpellPowerEffect spellPowerEffect)
             {
@@ -176,7 +171,7 @@ public class RelicManager
     {
         if (player == null) return;
         
-        foreach (var relic in activeRelics)
+        foreach (var relic in availableRelics)
         {
             if (relic.effect is GainSpellPowerEffect spellPowerEffect)
             {
@@ -192,7 +187,7 @@ public class RelicManager
     {
         if (player == null) return;
         
-        foreach (var relic in activeRelics)
+        foreach (var relic in availableRelics)
         {
             if (relic.effect is GainSpellPowerEffect spellPowerEffect)
             {

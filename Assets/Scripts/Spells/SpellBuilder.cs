@@ -104,6 +104,8 @@ public class SpellBuilder
                 return new HomingSpell(baseSpell);
             case "bounce":
                 return new BounceSpell(baseSpell);
+            case "heavy":
+                return new HeavySpell(baseSpell);
             default:
                 Debug.LogError($"Unknown modifier: {modifier}");
                 return baseSpell;

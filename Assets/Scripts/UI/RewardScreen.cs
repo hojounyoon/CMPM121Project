@@ -60,25 +60,22 @@ public class RewardScreen : MonoBehaviour
 
         Debug.Log("RewardScreen Show() called");
 
-        // Check if it's time for relic rewards (every third wave starting from wave 3)
+        // Always show spell rewards
+        ShowSpellRewards();
+
+        // If it's time for relic rewards (every third wave starting from wave 3), show them too
         if (GameManager.Instance.currentWave >= 3 && GameManager.Instance.currentWave % 3 == 0)
         {
             ShowRelicRewards();
         }
-        else
-        {
-            ShowSpellRewards();
-        }
+
+        // Activate the screen and update the canvas
+        gameObject.SetActive(true);
+        Canvas.ForceUpdateCanvases();
     }
 
     private void ShowSpellRewards()
     {
-        // Hide relic panel if it exists
-        if (relicRewardPanel != null)
-        {
-            relicRewardPanel.SetActive(false);
-        }
-
         // Show spell reward UI elements
         if (spellNameText != null) spellNameText.gameObject.SetActive(true);
         if (descriptionText != null) descriptionText.gameObject.SetActive(true);
@@ -94,19 +91,10 @@ public class RewardScreen : MonoBehaviour
             hasGeneratedSpell = true;
         }
         DisplaySpell(generatedSpell);
-
-        gameObject.SetActive(true);
-        Canvas.ForceUpdateCanvases();
     }
 
     private void ShowRelicRewards()
     {
-        // Hide spell reward UI elements
-        if (spellNameText != null) spellNameText.gameObject.SetActive(false);
-        if (descriptionText != null) descriptionText.gameObject.SetActive(false);
-        if (spellIcon != null) spellIcon.gameObject.SetActive(false);
-        if (acceptButton != null) acceptButton.gameObject.SetActive(false);
-
         // Show relic panel
         if (relicRewardPanel != null)
         {
@@ -116,65 +104,23 @@ public class RewardScreen : MonoBehaviour
         LoadAvailableRelics();
         SelectRandomRelics();
         UpdateRelicUI();
-
-        gameObject.SetActive(true);
-        Canvas.ForceUpdateCanvases();
     }
 
     private void LoadAvailableRelics()
     {
         availableRelics.Clear();
-        TextAsset relicsJson = Resources.Load<TextAsset>("relics");
-        if (relicsJson == null)
-        {
-            Debug.LogError("Failed to load relics.json! Make sure the file exists in the Resources folder.");
-            return;
-        }
-        Debug.Log($"Successfully loaded relics.json: {relicsJson.text}");
-
-        JArray relicsArray = JArray.Parse(relicsJson.text);
-        Debug.Log($"Found {relicsArray.Count} relics in the JSON file");
-
-        foreach (JObject relicObj in relicsArray)
-        {
-            string name = relicObj["name"].ToString();
-            int spriteIndex = relicObj["sprite"].ToObject<int>();
-            
-            JObject triggerObj = relicObj["trigger"] as JObject;
-            JObject effectObj = relicObj["effect"] as JObject;
-
-            RelicTrigger trigger = RelicManager.Instance.CreateTrigger(triggerObj);
-            RelicEffect effect = RelicManager.Instance.CreateEffect(effectObj);
-
-            if (trigger != null && effect != null)
-            {
-                Relic relic = new Relic(name, spriteIndex, trigger, effect);
-                availableRelics.Add(relic);
-                Debug.Log($"Successfully loaded relic: {name}");
-            }
-            else
-            {
-                Debug.LogError($"Failed to create trigger or effect for relic: {name}");
-            }
-        }
-        Debug.Log($"Total relics loaded: {availableRelics.Count}");
+        availableRelics = RelicManager.Instance.GetAvailableRelics();
+        Debug.Log($"Total available relics: {availableRelics.Count}");
     }
 
     private void SelectRandomRelics()
     {
         offeredRelics.Clear();
-        var existingRelics = RelicManager.Instance.GetActiveRelics();
-        Debug.Log($"Currently active relics: {string.Join(", ", existingRelics.Select(r => r.name))}");
+        var availableRelics = RelicManager.Instance.GetAvailableRelics();
         
-        var availableRelics = this.availableRelics.Where(r => 
-            !existingRelics.Any(er => er.name == r.name)).ToList();
-        Debug.Log($"Available relics after filtering: {string.Join(", ", availableRelics.Select(r => r.name))}");
-
         if (availableRelics.Count == 0)
         {
-            Debug.LogWarning("No new relics available! This might be because:");
-            Debug.LogWarning($"1. All relics are already active: {string.Join(", ", existingRelics.Select(r => r.name))}");
-            Debug.LogWarning($"2. No relics were loaded: {this.availableRelics.Count} total relics loaded");
+            Debug.Log("No relics available to offer");
             return;
         }
 
@@ -193,7 +139,6 @@ public class RewardScreen : MonoBehaviour
         {
             offeredRelics.Add(availableRelics[i]);
         }
-        Debug.Log($"Selected relics to offer: {string.Join(", ", offeredRelics.Select(r => r.name))}");
     }
 
     private void UpdateRelicUI()
@@ -242,7 +187,6 @@ public class RewardScreen : MonoBehaviour
             Relic selectedRelic = offeredRelics[index];
             RelicManager.Instance.AddRelic(selectedRelic);
             gameObject.SetActive(false);
-            GameManager.Instance.ContinueGame();
         }
     }
 
