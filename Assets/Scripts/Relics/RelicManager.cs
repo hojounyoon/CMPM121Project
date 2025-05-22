@@ -70,6 +70,12 @@ public class RelicManager
                 return new StandStillTrigger(time);
             case "on-kill":
                 return new OnKillTrigger();
+            case "on-wave-start":
+                return new OnWaveStartTrigger();
+            case "deal-damage":
+                return new DealDamageTrigger();
+            case "wave-complete":
+                return new WaveCompleteTrigger();
             default:
                 Debug.LogError($"Unknown trigger type: {type}");
                 return null;
@@ -101,6 +107,13 @@ public class RelicManager
                     int spellPowerAmount = int.Parse(amount);
                     return new GainSpellPowerEffect(spellPowerAmount, until);
                 }
+            case "temporary-spellpower":
+                int tempSpellPowerAmount = int.Parse(amount);
+                float duration = float.Parse(effectObj["duration"].ToString());
+                return new TemporarySpellPowerEffect(tempSpellPowerAmount, duration);
+            case "gain-max-hp":
+                int hpAmount = int.Parse(amount);
+                return new GainMaxHPEffect(hpAmount);
             default:
                 Debug.LogError($"Unknown effect type: {type}");
                 return null;
