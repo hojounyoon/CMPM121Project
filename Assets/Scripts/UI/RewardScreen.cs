@@ -64,9 +64,17 @@ public class RewardScreen : MonoBehaviour
         ShowSpellRewards();
 
         // If it's time for relic rewards (every third wave starting from wave 3), show them too
-        if (GameManager.Instance.currentWave >= 3 && GameManager.Instance.currentWave % 3 == 0)
+        if (GameManager.Instance.currentWave % 3 == 0)
         {
             ShowRelicRewards();
+        }
+        else
+        {
+            // Hide relic screen if it's not a relic wave
+            if (relicRewardPanel != null)
+            {
+                relicRewardPanel.SetActive(false);
+            }
         }
 
         // Activate the screen and update the canvas
