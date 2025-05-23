@@ -35,10 +35,12 @@ public class RewardScreen : MonoBehaviour
         // Set up relic button listeners
         for (int i = 0; i < takeButtons.Length; i++)
         {
-            int index = i;
+            int index = i;  // Create a local copy of i for the lambda
             if (takeButtons[i] != null)
             {
+                takeButtons[i].onClick.RemoveAllListeners();  // Clear any existing listeners
                 takeButtons[i].onClick.AddListener(() => OnRelicSelected(index));
+                Debug.Log($"Set up button {i} to call OnRelicSelected({index})");
             }
         }
 
@@ -194,7 +196,11 @@ public class RewardScreen : MonoBehaviour
         {
             Relic selectedRelic = offeredRelics[index];
             RelicManager.Instance.AddRelic(selectedRelic);
-            gameObject.SetActive(false);
+            if (relicRewardPanel != null)
+            {
+                relicRewardPanel.SetActive(false);  // Hide the relic panel
+            }
+            Debug.Log($"Selected relic {selectedRelic.name} and hiding panel");
         }
     }
 
