@@ -60,28 +60,6 @@ public class PlayerController : MonoBehaviour
             //Debug.Log($"Current Points: {StatManager.Instance.totalPoints}, Enemy Count: {GameManager.Instance.enemy_count}");
         }
 
-        // Handle player input
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-            CheckMovement();
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.Translate(Vector3.back * speed * Time.deltaTime);
-            CheckMovement();
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Translate(Vector3.left * speed * Time.deltaTime);
-            CheckMovement();
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
-            CheckMovement();
-        }
-
         // Handle shooting
         if (Input.GetKeyDown(KeyCode.Space))
         {
