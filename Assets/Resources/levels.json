@@ -30,6 +30,20 @@
                 "hp": "20 5 wave * +",
                 "sequence": [2, 2],
                 "location": "random"
+            },
+            {
+                "enemy": "wendigo",
+                "count": "wave 5 /",
+                "hp": "100 25 wave * +",
+                "location": "random bone"
+            },
+            {
+                "enemy": "wolf",
+                "count": "1 wave 2 / +",
+                "hp": "base wave 2 * +",
+                "delay": "5",
+                "sequence": [1,3],
+                "location": "random green"
             }
         ]
    },
@@ -65,7 +79,21 @@
                 "hp": "20 5 wave * +",
                 "sequence": [2, 2],
                 "location": "random"
-            }   
+            },
+            {
+                "enemy": "wendigo",
+                "count": "wave 5 /",
+                "hp": "100 25 wave * +",
+                "location": "random bone"
+            },
+            {
+                "enemy": "wolf",
+                "count": "1 wave +",
+                "hp": "base wave 2 * +",
+                "delay": "5",
+                "sequence": [1,3],
+                "location": "random green"
+            }
         ]
    },
    {   
@@ -99,7 +127,29 @@
                 "hp": "20 5 wave * +",
                 "sequence": [2, 2],
                 "location": "random"
-            }       
+            },
+            {
+                "enemy": "wendigo",
+                "count": "wave 5 /",
+                "hp": "100 25 wave * +",
+                "location": "random bone"
+            },
+            {
+                "enemy": "wolf",
+                "count": "2 wave 2 / +",
+                "hp": "base wave 2 * +",
+                "damage": "base wave 5 / +",
+                "delay": "5",
+                "sequence": [1,3],
+                "location": "random green"
+            },
+            {
+                "enemy": "ghoul",
+                "count": "2 wave 5 / +",
+                "hp": "base wave 3 / +",
+                "speed": "base wave 5 / +",
+                "location": "random"
+            }
         ]
    }
 ]

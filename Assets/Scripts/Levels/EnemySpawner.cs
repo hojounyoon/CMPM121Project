@@ -82,6 +82,7 @@ public class EnemySpawner : MonoBehaviour
         }
         List<int> sequence = levels[0]["spawns"][0]["sequence"].ToObject<List<int>>();
         // Create buttons for each level
+        Debug.Log($"Count of levels {levels[0]["spawns"][5]}");
         CreateLevelButtons();
     }
 
@@ -224,10 +225,11 @@ public class EnemySpawner : MonoBehaviour
         int enemiesToSpawn = Mathf.Max(0, 10 - GameManager.Instance.enemy_count);
         Debug.Log($"Starting wave: {currentWave}. Current enemies: {GameManager.Instance.enemy_count}, Enemies to spawn: {enemiesToSpawn}");
         // current sequence placement: i %sequence.count 
-        for (int j = 0; j < enemyList.Count; j++)
+        for (int j = 0; j < levels[currentLevel]["spawns"].Count(); j++)
         {
             //Debug.Log("hi");
-            //Debug.Log(levels[currentLevel]["spawns"][j]["sequence"]);
+            //Debug.Log($"j is {j}");
+            //Debug.Log($" sequence is {levels[currentLevel]["spawns"][j]["sequence"]}");
             List<int> sequence = new List<int>();
             sequence.Add(1);
             if (levels[currentLevel]["spawns"][j]["sequence"] != null)
@@ -240,6 +242,7 @@ public class EnemySpawner : MonoBehaviour
                 delay = levels[currentLevel]["spawns"][j]["delay"].ToObject<float>();
             }
             int totalSpawn = RPNCount(j);
+            Debug.Log($"amount to spawn for {levels[currentLevel]["spawns"][j]["enemy"]} is {totalSpawn}");
             int currentlySpawn = 0;
             int amountToSpawn = 0;
             //Debug.Log($"spawning: {RPNCount(j)}");
@@ -315,7 +318,7 @@ public class EnemySpawner : MonoBehaviour
         Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
         GameObject new_enemy = Instantiate(enemy, initial_position, Quaternion.identity);
 
-        new_enemy.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.enemySpriteManager.Get(type);
+        new_enemy.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.enemySpriteManager.Get(enemyList[type].sprite);
         EnemyController en = new_enemy.GetComponent<EnemyController>();
         en.hp = new Hittable(RPNHp(type), Hittable.Team.MONSTERS, new_enemy);
         en.speed = enemyList[type].speed;
