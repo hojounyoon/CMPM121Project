@@ -106,6 +106,8 @@ public class SpellBuilder
                 return new BounceSpell(baseSpell);
             case "heavy":
                 return new HeavySpell(baseSpell);
+            case "rapid-fire":
+                return new RapidFireSpell(baseSpell);
             default:
                 Debug.LogError($"Unknown modifier: {modifier}");
                 return baseSpell;

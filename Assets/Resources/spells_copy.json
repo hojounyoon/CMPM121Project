@@ -90,6 +90,14 @@
        "mana_multiplier": "1.5"
    },
    {
+        "name": "rapid-fire",
+        "description": "Decreased cooldown and damage, but increased speed.",
+        "damage_multiplier": "0.25",
+        "mana_multiplier": "0.5",
+        "speed_multiplier": "2",
+        "cooldown_multiplier": "0.1"
+   },
+   {
        "name": "bounce",
        "type": "modifier",
        "description": "If this spell hits a enemy, it bounces of off them",
