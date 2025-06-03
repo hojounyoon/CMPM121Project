@@ -304,4 +304,42 @@ public class RapidFireSpell : Spell
     protected override IEnumerator DoCast(Vector3 where, Vector3 target) => baseSpell.Cast(where, target, team);
 }
 
+public class SlugSpell : Spell
+{
+    private Spell baseSpell;
+    private float damageMultiplier = 2f;
+    private float manaMultiplier = 1.75f;
+    private float speedMultiplier = 0.5f;
+    private float cooldownMultiplier = 1.25f;
+
+    public SlugSpell(Spell spell) : base(spell.owner)
+    {
+        this.baseSpell = spell;
+    }
+
+    public override int GetDamage()
+    {
+        return (int)(baseSpell.GetDamage() * damageMultiplier);
+    }
+
+    public override int GetManaCost()
+    {
+        return (int)(baseSpell.GetManaCost() * manaMultiplier);
+    }
+
+    public override float GetCooldown()
+    {
+        return baseSpell.GetCooldown() * cooldownMultiplier;
+    }
+
+    public override float GetProjectileSpeed()
+    {
+        return baseSpell.GetProjectileSpeed() * speedMultiplier;
+    }
+
+    public override string GetName() => "Slug " + baseSpell.GetName();
+    public override int GetIcon() => baseSpell.GetIcon();
+    protected override IEnumerator DoCast(Vector3 where, Vector3 target) => baseSpell.Cast(where, target, team);
+}
+
 // Similar implementations for other modifiers... 

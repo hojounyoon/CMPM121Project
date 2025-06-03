@@ -79,6 +79,8 @@ public class SpellBuilder
                 return new ArcaneSpraySpell(caster, spellData);
             case "arcane_slow":
                 return new ArcaneSlowSpell(caster, spellData);
+            case "ice_bolt":
+                return new IceBoltSpell(caster, spellData);
             default:
                 Debug.LogError($"Unknown base spell type: {baseSpell}, defaulting to arcane_bolt");
                 return new Spell(caster, spellList[0]);
@@ -108,6 +110,8 @@ public class SpellBuilder
                 return new HeavySpell(baseSpell);
             case "rapid-fire":
                 return new RapidFireSpell(baseSpell);
+            case "slug":
+                return new SlugSpell(baseSpell);
             default:
                 Debug.LogError($"Unknown modifier: {modifier}");
                 return baseSpell;

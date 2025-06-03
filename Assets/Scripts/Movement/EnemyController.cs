@@ -8,6 +8,8 @@ public class EnemyController : MonoBehaviour
     public Hittable hp;
     public HealthBar healthui;
     public bool dead;
+    private bool isStunned = false;
+    private float stunEndTime = 0f;
 
     public float last_attack;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,14 +23,26 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 direction = target.position - transform.position;
-        if (direction.magnitude < 2f)
+        if (isStunned && Time.time >= stunEndTime)
         {
-            DoAttack();
+            isStunned = false;
+        }
+
+        if (!isStunned)
+        {
+            Vector3 direction = target.position - transform.position;
+            if (direction.magnitude < 2f)
+            {
+                DoAttack();
+            }
+            else
+            {
+                GetComponent<Unit>().movement = direction.normalized * speed;
+            }
         }
         else
         {
-            GetComponent<Unit>().movement = direction.normalized * speed;
+            GetComponent<Unit>().movement = Vector3.zero;
         }
     }
     
@@ -39,6 +53,12 @@ public class EnemyController : MonoBehaviour
             last_attack = Time.time;
             target.gameObject.GetComponent<PlayerController>().hp.Damage(new Damage(dmg, Damage.Type.PHYSICAL));
         }
+    }
+
+    public void Stun(float duration)
+    {
+        isStunned = true;
+        stunEndTime = Time.time + duration;
     }
 
     public void Die()
