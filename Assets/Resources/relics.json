@@ -70,7 +70,7 @@
     },
     {
         "name": "Mana Blade",
-        "sprite": 5,
+        "sprite": 8,
         "trigger": {
             "description": "Whenever you deal damage to an enemy",
             "type": "deal-damage"
@@ -92,6 +92,48 @@
             "description": "gain 10 max hp",
             "type": "gain-max-hp",
             "amount": "10"
+        }
+    },
+    {
+        "name": "Shield of Absorption",
+        "sprite": 5,
+        "trigger": {
+            "description": "While you have max mana",
+            "type": "on-max-mana",
+            "until": "cast-spell"
+        },
+        "effect": {
+            "description": "the damage you take is reduced by 50%.",
+            "type": "gain-defense",
+            "amount": "0.5",
+            "until": "cast-spell"
+        }
+    },
+    {
+        "name": "Bloodstone",
+        "sprite": 7,
+        "trigger": {
+            "description": "When you kill an enemy",
+            "type": "on-kill"
+        },
+        "effect": {
+            "description": "you restore 10 HP.",
+            "type": "regain-hp",
+            "amount": "10"
+        }
+    },
+    {
+        "name": "Divine Pearl",
+        "sprite": 13,
+        "trigger": {
+            "description": "When you drop a spell",
+            "type": "on-spell-drop"
+        },
+        "effect": {
+            "description": "you gain a permanent increase to your spellpower.",
+            "type": "gain-spellpower",
+            "amount": "10",
+            "until": "permanent"
         }
     }
 ]

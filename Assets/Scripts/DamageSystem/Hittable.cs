@@ -9,13 +9,15 @@ public class Hittable
 
     public int hp;
     public int max_hp;
+    public float defense;
 
     public GameObject owner;
 
     public void Damage(Damage damage)
     {
         EventBus.Instance.DoDamage(owner.transform.position, damage, this);
-        hp -= damage.amount;
+        int actualDamage = Mathf.Max(1, Mathf.RoundToInt(damage.amount * (1 - defense)));
+        hp -= actualDamage;
         if (hp <= 0)
         {
             hp = 0;
@@ -48,6 +50,7 @@ public class Hittable
         this.max_hp = hp;
         this.team = team;
         this.owner = owner;
+        this.defense = 0f;
     }
 
     public void SetMaxHP(int max_hp)

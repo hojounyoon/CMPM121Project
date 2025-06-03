@@ -76,6 +76,10 @@ public class RelicManager
                 return new DealDamageTrigger();
             case "wave-complete":
                 return new WaveCompleteTrigger();
+            case "on-max-mana":
+                return new OnMaxManaTrigger();
+            case "on-spell-drop":
+                return new OnSpellDropTrigger();
             default:
                 Debug.LogError($"Unknown trigger type: {type}");
                 return null;
@@ -114,6 +118,12 @@ public class RelicManager
             case "gain-max-hp":
                 int hpAmount = int.Parse(amount);
                 return new GainMaxHPEffect(hpAmount);
+            case "gain-defense":
+                float defenseAmount = float.Parse(amount);
+                return new GainDefenseEffect(defenseAmount);
+            case "regain-hp":
+                int healAmount = int.Parse(amount);
+                return new RegainHPEffect(healAmount);
             default:
                 Debug.LogError($"Unknown effect type: {type}");
                 return null;
@@ -205,6 +215,35 @@ public class RelicManager
             if (relic.effect is GainSpellPowerEffect spellPowerEffect)
             {
                 spellPowerEffect.UpdateForWave(waveNumber);
+            }
+        }
+    }
+
+    public void OnManaChanged()
+    {
+        if (player == null) return;
+        
+        foreach (var relic in availableRelics)
+        {
+            if (relic.trigger is OnMaxManaTrigger)
+            {
+                if (relic.trigger.CheckTrigger(player.gameObject))
+                {
+                    relic.effect.ApplyEffect(player.gameObject);
+                }
+            }
+        }
+    }
+
+    public void OnSpellDrop()
+    {
+        if (player == null) return;
+        
+        foreach (var relic in availableRelics)
+        {
+            if (relic.trigger is OnSpellDropTrigger)
+            {
+                relic.effect.ApplyEffect(player.gameObject);
             }
         }
     }
